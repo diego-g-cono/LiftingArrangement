@@ -3,16 +3,17 @@ package com.liftingarrangement.lifting_arrangement.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
-
 @Data
 @Entity
-public class Brand {
+public class WebbingSling {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    private String name;
 
-    @OneToMany(mappedBy="liftingShackle", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<LiftingShackle> liftingShackles;
+    @ManyToOne
+    @JoinColumn(name = "id_brand")
+    private Brand brand;
+
+    private Float capacity;
+    private Float length;
 }
