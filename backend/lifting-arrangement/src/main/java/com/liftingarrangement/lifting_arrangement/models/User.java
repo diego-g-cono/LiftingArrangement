@@ -18,4 +18,7 @@ public class User {
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Header>headers;
 
+    @OneToMany(mappedBy="controller", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Revision>revisions;
+
 }

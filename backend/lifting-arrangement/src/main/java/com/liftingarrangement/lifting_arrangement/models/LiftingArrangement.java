@@ -8,19 +8,9 @@ import java.util.Set;
 @Data
 @Entity
 public class LiftingArrangement {
-    @ManyToOne
-    @MapsId
-    @JoinColumn(name = "id_headerLA")
-    private Header header;
 
-    @Id
-    private Integer row;
-
-    @Id
-    private Integer column;
-
-    @Id
-    private Integer plane;
+    @EmbeddedId
+    private LiftingArrangementId id;
 
     @ManyToOne
     @JoinColumn(name = "id_liftingBeam")
@@ -59,4 +49,7 @@ public class LiftingArrangement {
     private Integer rootPlane;
     private Float angle;
     private String status;
+
+    @OneToMany(mappedBy = "liftingArrangement", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Revision> revisions;
 }
