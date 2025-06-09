@@ -3,6 +3,8 @@ package com.liftingarrangement.lifting_arrangement.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Set;
+
 @Data
 @Entity
 public class ChainSling {
@@ -16,4 +18,7 @@ public class ChainSling {
 
     private Float capacity;
     private Float length;
+
+    @OneToMany(mappedBy="chainSling", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<LiftingArrangement> liftingArrangements;
 }

@@ -3,6 +3,8 @@ package com.liftingarrangement.lifting_arrangement.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Set;
+
 @Data
 @Entity
 public class Header {
@@ -24,4 +26,6 @@ public class Header {
     private String liftingBeamName;
     private Float liftingBeamCapacity;
 
+    @OneToMany(mappedBy="header", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<LiftingArrangement> liftingArrangements;
 }

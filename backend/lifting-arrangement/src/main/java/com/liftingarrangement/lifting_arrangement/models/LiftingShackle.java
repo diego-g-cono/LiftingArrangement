@@ -3,6 +3,8 @@ package com.liftingarrangement.lifting_arrangement.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Set;
+
 @Data
 @Entity
 public class LiftingShackle {
@@ -16,4 +18,7 @@ public class LiftingShackle {
 
     private Float capacity;
     private Float weight;
+
+    @OneToMany(mappedBy="liftingShackle", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<LiftingArrangement> liftingArrangements;
 }

@@ -19,4 +19,6 @@ public class LiftingBeam {
     @OneToMany(mappedBy="liftingBeam", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<LiftingBeamEyebolt> liftingBeamEyebolts;
 
+    @OneToMany(mappedBy="liftingBeam", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<LiftingArrangement> liftingArrangements;
 }
