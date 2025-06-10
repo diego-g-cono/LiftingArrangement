@@ -12,6 +12,11 @@ public class LiftingArrangement {
     @EmbeddedId
     private LiftingArrangementId id;
 
+    @MapsId("headerId")
+    @ManyToOne
+    @JoinColumn(name = "id_headerLA")
+    private Header header;
+
     @ManyToOne
     @JoinColumn(name = "id_liftingBeam")
     private LiftingBeam liftingBeam;

@@ -3,8 +3,6 @@ package com.liftingarrangement.lifting_arrangement.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
-
 @Data
 @Entity
 public class Header {
@@ -14,7 +12,7 @@ public class Header {
 
     @ManyToOne
     @JoinColumn(name="id_user")
-    private User user;
+    private UserLA userLA;
 
     private String date;
     private String product;
@@ -26,6 +24,6 @@ public class Header {
     private String liftingBeamName;
     private Float liftingBeamCapacity;
 
-    @OneToMany(mappedBy="header", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<LiftingArrangement> liftingArrangements;
+    /*@OneToMany(mappedBy="header", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<LiftingArrangement> liftingArrangements;*/
 }

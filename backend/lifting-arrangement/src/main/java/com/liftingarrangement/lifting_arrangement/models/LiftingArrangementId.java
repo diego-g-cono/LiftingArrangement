@@ -1,18 +1,17 @@
 package com.liftingarrangement.lifting_arrangement.models;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+
 import lombok.Data;
+
+import java.io.Serializable;
 
 @Data
 @Embeddable
-public class LiftingArrangementId {
-    @ManyToOne
-    @JoinColumn(name = "id_headerLA")
-    private Header header;
+public class LiftingArrangementId implements Serializable {
 
-    private Integer row;
-    private Integer column;
-    private Integer plane;
+    private Long headerId;
+    private Integer rowLA;
+    private Integer columnLA;
+    private Integer planeLA;
 }

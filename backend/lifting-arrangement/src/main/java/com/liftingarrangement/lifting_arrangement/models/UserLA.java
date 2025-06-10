@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
-public class User {
+public class UserLA {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -15,7 +15,7 @@ public class User {
     private String password;
     private String email;
 
-    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="userLA", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Header>headers;
 
     @OneToMany(mappedBy="controller", cascade = CascadeType.ALL, orphanRemoval = true)
