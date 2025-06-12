@@ -49,6 +49,10 @@ public class LiftingArrangement {
     @JoinColumn(name = "id_liftingHook")
     private LiftingHook liftingHook;
 
+    @ManyToOne
+    @JoinColumn(name = "id_liftingRing")
+    private LiftingHook liftingRing;
+
     private Integer rootRow;
     private Integer rootColumn;
     private Integer rootPlane;
