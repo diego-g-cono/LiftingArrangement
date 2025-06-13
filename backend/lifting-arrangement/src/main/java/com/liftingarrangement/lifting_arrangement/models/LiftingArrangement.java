@@ -51,7 +51,7 @@ public class LiftingArrangement {
 
     @ManyToOne
     @JoinColumn(name = "id_liftingRing")
-    private LiftingHook liftingRing;
+    private LiftingRing liftingRing;
 
     private Integer rootRow;
     private Integer rootColumn;
