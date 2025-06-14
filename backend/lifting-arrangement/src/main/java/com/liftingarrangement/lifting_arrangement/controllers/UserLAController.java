@@ -5,11 +5,18 @@ import com.liftingarrangement.lifting_arrangement.services.IUserLAService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/usersLA")
 public class UserLAController {
     @Autowired
     private IUserLAService service;
+
+    @GetMapping
+    public List<UserLA> getUsersLA(){
+        return service.getUsersLA();
+    }
 
     @GetMapping("{id}")
     public UserLA getUserLA(@PathVariable("id")Long id){
