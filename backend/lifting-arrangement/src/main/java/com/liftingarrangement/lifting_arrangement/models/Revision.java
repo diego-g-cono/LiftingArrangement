@@ -18,12 +18,16 @@ public class Revision {
     @JoinColumn(name = "id_controller")
     private UserLA controller;
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumns({
             @JoinColumn(name = "rowLA", referencedColumnName = "rowLA"),
             @JoinColumn(name = "columnLA", referencedColumnName = "columnLA"),
             @JoinColumn(name = "planeLA", referencedColumnName = "planeLA"),
             @JoinColumn(name = "id_headerLA", referencedColumnName = "id_headerLA")
     })
-    private LiftingArrangement liftingArrangement;
+    private LiftingArrangement liftingArrangement;*/
+
+    @OneToOne
+    @JoinColumn(name="id_headerLA")
+    private Header header;
 }

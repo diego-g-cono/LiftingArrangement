@@ -59,6 +59,6 @@ public class LiftingArrangement {
     private Float angle;
     private String status;
 
-    @OneToMany(mappedBy = "liftingArrangement", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Revision> revisions;
+    /*@OneToMany(mappedBy = "liftingArrangement", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Revision> revisions;*/
 }

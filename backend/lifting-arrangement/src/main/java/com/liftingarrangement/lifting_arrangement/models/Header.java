@@ -26,4 +26,7 @@ public class Header {
 
     /*@OneToMany(mappedBy="header", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<LiftingArrangement> liftingArrangements;*/
+
+    @OneToOne(mappedBy="header", cascade=CascadeType.ALL, orphanRemoval = true)
+    private Revision revision;
 }
