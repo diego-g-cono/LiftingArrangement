@@ -15,6 +15,7 @@ public class LiftingBeam {
     private Float maxCapacity;
     private Float length;
     private Float width;
+    private Float weight;
 
     @OneToMany(mappedBy="liftingBeam", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<LiftingBeamEyebolt> liftingBeamEyebolts;
