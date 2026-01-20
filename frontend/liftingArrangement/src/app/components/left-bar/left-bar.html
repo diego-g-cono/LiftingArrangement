@@ -13,23 +13,57 @@
   <!-- Items -->
   <nav class="flex-1 px-2 space-y-1">
 
-    <button
-      class="w-full flex items-center gap-3 px-3 py-2 rounded-md
-             hover:bg-slate-700 transition-colors text-left"
-    >
-      <span class="text-lg">🟨</span>
-      <span class="text-sm font-medium">Beams</span>
-    </button>
+<!-- BEAMS -->
+<button
+  (click)="toggle('BEAMS')"
+  class="w-full flex items-center gap-3 px-3 py-2 rounded-md
+         hover:bg-slate-700 transition-colors text-left"
+>
+  <span class="text-lg">🟨</span>
+  <span class="text-sm font-medium">Beams</span>
+</button>
 
-    <button
-      class="w-full flex items-center gap-3 px-3 py-2 rounded-md
-             hover:bg-slate-700 transition-colors text-left"
-    >
-      <span class="text-lg">🪢</span>
-      <span class="text-sm font-medium">Slings</span>
-    </button>
+<!-- Subpanel Beam-->
+<div *ngIf="openSection === 'BEAMS'" class="ml-6 mt-2 space-y-2">
+<div
+  *ngFor="let item of catalog.BEAMS"
+  draggable="true"
+  (dragstart)="onDragStart($event, item)"
+  class="p-2 bg-slate-700 rounded cursor-grab"
+>
+  <img [src]="item.preview" class="w-full pointer-events-none" />
+  <div class="text-xs text-center mt-1">{{ item.label }}</div>
+</div>
 
+</div>
+
+<!-- SLINGS -->
+<button
+  (click)="toggle('SLINGS')"
+  class="w-full flex items-center gap-3 px-3 py-2 rounded-md
+          hover:bg-slate-700 transition-colors text-left"
+>
+  <span class="text-lg">🪢</span>
+  <span class="text-sm font-medium">Slings</span>
+</button>
+
+<!-- Subpanel Slings-->
+<div *ngIf="openSection === 'SLINGS'" class="ml-6 mt-2 space-y-2">
+<div
+  *ngFor="let item of catalog.SLINGS"
+  draggable="true"
+  (dragstart)="onDragStart($event, item)"
+  class="p-2 bg-slate-700 rounded cursor-grab"
+>
+  <img [src]="item.preview" class="w-full pointer-events-none" />
+  <div class="text-xs text-center mt-1">{{ item.label }}</div>
+</div>
+
+</div>
+
+<!-- CHAINS -->
     <button
+    (click)="toggle('CHAINS')"
       class="w-full flex items-center gap-3 px-3 py-2 rounded-md
              hover:bg-slate-700 transition-colors text-left"
     >
@@ -37,7 +71,23 @@
       <span class="text-sm font-medium">Chains</span>
     </button>
 
+    <!-- Subpanel Chain-->
+<div *ngIf="openSection === 'CHAINS'" class="ml-6 mt-2 space-y-2">
+<div
+  *ngFor="let item of catalog.CHAINS"
+  draggable="true"
+  (dragstart)="onDragStart($event, item)"
+  class="p-2 bg-slate-700 rounded cursor-grab"
+>
+  <img [src]="item.preview" class="w-full pointer-events-none" />
+  <div class="text-xs text-center mt-1">{{ item.label }}</div>
+</div>
+
+</div>
+
+<!-- SHACKLES -->
     <button
+    (click)="toggle('SHACKLES')"
       class="w-full flex items-center gap-3 px-3 py-2 rounded-md
              hover:bg-slate-700 transition-colors text-left"
     >
@@ -45,22 +95,63 @@
       <span class="text-sm font-medium">Shackles</span>
     </button>
 
+        <!-- Subpanel Shackles-->
+<div *ngIf="openSection === 'SHACKLES'" class="ml-6 mt-2 space-y-2">
+<div
+  *ngFor="let item of catalog.SHACKLES"
+  draggable="true"
+  (dragstart)="onDragStart($event, item)"
+  class="p-2 bg-slate-700 rounded cursor-grab"
+>
+  <img [src]="item.preview" class="w-full pointer-events-none" />
+  <div class="text-xs text-center mt-1">{{ item.label }}</div>
+</div>
+</div>
+
+<!-- HOOKS -->
     <button
+      (click)="toggle('HOOKS')"
       class="w-full flex items-center gap-3 px-3 py-2 rounded-md
              hover:bg-slate-700 transition-colors text-left"
     >
       <span class="text-lg">🪝</span>
       <span class="text-sm font-medium">Hooks</span>
     </button>
+<!-- Subpanel Hooks-->
+<div *ngIf="openSection === 'HOOKS'" class="ml-6 mt-2 space-y-2">
+<div
+  *ngFor="let item of catalog.HOOKS"
+  draggable="true"
+  (dragstart)="onDragStart($event, item)"
+  class="p-2 bg-slate-700 rounded cursor-grab"
+>
+  <img [src]="item.preview" class="w-full pointer-events-none" />
+  <div class="text-xs text-center mt-1">{{ item.label }}</div>
+</div>
+</div>
 
+<!-- CONNECTORS -->
     <button
+      (click)="toggle('CONNECTORS')"
       class="w-full flex items-center gap-3 px-3 py-2 rounded-md
              hover:bg-slate-700 transition-colors text-left"
     >
       <span class="text-lg">🔩</span>
       <span class="text-sm font-medium">Connectors</span>
     </button>
-
+    <!-- Subpanel Hooks-->
+<div *ngIf="openSection === 'CONNECTORS'" class="ml-6 mt-2 space-y-2">
+<div
+  *ngFor="let item of catalog.CONNECTORS"
+  draggable="true"
+  (dragstart)="onDragStart($event, item)"
+  class="p-2 bg-slate-700 rounded cursor-grab"
+>
+  <img [src]="item.preview" class="w-full pointer-events-none" />
+  <div class="text-xs text-center mt-1">{{ item.label }}</div>
+</div>
+</div>
+    
   </nav>
   
 </aside>

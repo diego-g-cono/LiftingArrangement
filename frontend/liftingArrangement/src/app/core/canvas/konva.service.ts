@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import Konva from 'konva';
 import { Beam } from '../../interfaces/beam.interface';
 import { BeamTerminal } from '../../interfaces/terminal.interface';
-import { CraneHook } from '../../interfaces/hook.interface';
+import { CraneHook } from '../../interfaces/crane-hook.interface';
 import { Connection } from '../../interfaces/connection.interface';
 import { Sling } from '../../interfaces/sling.interface';
 import { ElementType } from '../../interfaces/element-type.interface';
 import { Shackle } from '../../interfaces/shackle.interface';
 import { WireSling } from '../../interfaces/wire-sling.interface';
 import { Ring } from '../../interfaces/ring.interface';
+import { LinkChain } from '../../interfaces/link-chain.interface';
+import { Hook } from '../../interfaces/hook.interface';
 
 
 @Injectable({ providedIn: 'root' })
@@ -28,6 +30,9 @@ export class KonvaService {
   rings: Ring[] = [];
   wires: WireSling[] = [];
   shackles : Shackle[] = [];
+  linkChains: LinkChain[] = [];
+  hooks: Hook[] = [];
+
   rotationStep = 15;
   activeTerminal: BeamTerminal | null = null;
   activeLine: Konva.Line | null = null;
@@ -434,24 +439,24 @@ startConnection(terminal: BeamTerminal, shape: Konva.Circle) {
 }
 
 
-addHook(x = 0, y = 0) {
-  const hookId = crypto.randomUUID();
+addCraneHook(x = 0, y = 0) {
+  const craneHookId = crypto.randomUUID();
   const terminals: BeamTerminal[] = [];
   const SCALE = 0.2; 
 
 
   const imageObj = new Image();
-  imageObj.src = 'assets/craneHooks/pasteca-grua.png';
+  imageObj.src = 'assets/hooks/crane-hook.png';
 
   imageObj.onload = () => {
-    const hookGroup = new Konva.Group({
+    const craneHookGroup = new Konva.Group({
       x,
       y,
       draggable: true,
-      id: hookId,
+      id: craneHookId,
     });
 
-    const hookImage = new Konva.Image({
+    const craneHookImage = new Konva.Image({
   image: imageObj,
   x: 0,
   y: 0,
@@ -461,11 +466,11 @@ addHook(x = 0, y = 0) {
 
 
     // Centramos la imagen
-    hookImage.offsetX((imageObj.width * SCALE) / 2);
-    hookImage.offsetY((imageObj.height * SCALE) / 2);
+    craneHookImage.offsetX((imageObj.width * SCALE) / 2);
+    craneHookImage.offsetY((imageObj.height * SCALE) / 2);
 
 
-    hookGroup.add(hookImage);
+    craneHookGroup.add(craneHookImage);
 
     const width = imageObj.width;
     const height = imageObj.height;
@@ -473,7 +478,7 @@ addHook(x = 0, y = 0) {
     // ---------- TERMINAL SUPERIOR ----------
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: hookId,
+      ownerId: craneHookId,
       ownerType: 'CRANEHOOK',
       type: 'TOP',
       index: 0,
@@ -482,7 +487,7 @@ addHook(x = 0, y = 0) {
     };
 
     terminals.push(topTerminal);
-    hookGroup.add(
+    craneHookGroup.add(
       this.createTerminal(
         topTerminal.localX,
         topTerminal.localY,
@@ -493,7 +498,7 @@ addHook(x = 0, y = 0) {
     // ---------- TERMINAL INFERIOR ----------
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: hookId,
+      ownerId: craneHookId,
       ownerType: 'CRANEHOOK',
       type: 'BOTTOM',
       index: 0,
@@ -502,7 +507,7 @@ addHook(x = 0, y = 0) {
     };
 
     terminals.push(bottomTerminal);
-    hookGroup.add(
+    craneHookGroup.add(
       this.createTerminal(
         bottomTerminal.localX,
         bottomTerminal.localY,
@@ -511,28 +516,28 @@ addHook(x = 0, y = 0) {
     );
 
     // Snap al soltar
-    hookGroup.on('dragend', () => {
-      hookGroup.position({
-        x: this.snapToGrid(hookGroup.x()),
-        y: this.snapToGrid(hookGroup.y()),
+    craneHookGroup.on('dragend', () => {
+      craneHookGroup.position({
+        x: this.snapToGrid(craneHookGroup.x()),
+        y: this.snapToGrid(craneHookGroup.y()),
       });
       this.layer.batchDraw();
     });
     
-    hookGroup.on('dragmove', () => {
+    craneHookGroup.on('dragmove', () => {
       this.updateConnections();
     });
-    hookGroup.on('click', e => {
+    craneHookGroup.on('click', e => {
       e.cancelBubble = true; // evita pan
-      this.activeGroup = hookGroup;
-      this.selectGroup(hookGroup)
+      this.activeGroup = craneHookGroup;
+      this.selectGroup(craneHookGroup)
     });
 
-    this.camera.add(hookGroup);
+    this.camera.add(craneHookGroup);
 
     this.craneHooks.push({
-      id: hookId,
-      group: hookGroup,
+      id: craneHookId,
+      group: craneHookGroup,
       terminals,
     });
 
@@ -666,6 +671,15 @@ canConnect(a: BeamTerminal, b: BeamTerminal): boolean {
   if (a.ownerType === 'RING' && b.ownerType === 'SHACKLE') return true;
   if (a.ownerType === 'SHACKLE' && b.ownerType === 'RING') return true;
 
+  if (a.ownerType === 'LINKCHAIN' && b.ownerType === 'CHAIN') return true;
+  if (a.ownerType === 'CHAIN' && b.ownerType === 'LINKCHAIN') return true;
+
+  if (a.ownerType === 'LINKCHAIN' && b.ownerType === 'RING') return true;
+  if (a.ownerType === 'RING' && b.ownerType === 'LINKCHAIN') return true;
+
+  if (a.ownerType === 'LINKCHAIN' && b.ownerType === 'HOOK') return true;
+  if (a.ownerType === 'HOOK' && b.ownerType === 'LINKCHAIN') return true;
+  
   return false;
 }
 
@@ -720,14 +734,17 @@ getTerminalAbsPosition(terminal: BeamTerminal): { x: number; y: number } {
 
   return point;
 }
+
 findGroupByOwnerId(ownerId: string): Konva.Group | null {
   return (
     this.beams.find(b => b.id === ownerId)?.group ||
-    this.craneHooks.find(h => h.id === ownerId)?.group ||
+    this.craneHooks.find(ch => ch.id === ownerId)?.group ||
     this.slings.find(s => s.id === ownerId)?.group ||
     this.wires.find(w => w.id === ownerId)?.group ||
     this.rings.find(r => r.id === ownerId)?.group ||
     this.shackles.find(sh => sh.id === ownerId)?.group ||
+    this.linkChains.find(lc => lc.id === ownerId)?.group ||
+    this.hooks.find(h => h.id === ownerId)?.group ||
     null
   );
 }
@@ -844,22 +861,22 @@ updateSelectionVisual() {
     height: box.height + 12,
   });
 }
-addElement(type: ElementType) {
-  const x = 0;
-  const y = 0;
+// addElement(type: ElementType) {
+//   const x = 0;
+//   const y = 0;
 
-  switch (type) {
-    case 'BEAM':
-      this.addBeam(x, y);
-      break;
-    case 'HOOK':
-      this.addHook(x, y);
-      break;
-    case 'SLING':
-      this.addSling(x, y);
-      break;
-  }
-}
+//   switch (type) {
+//     case 'BEAM':
+//       this.addBeam(x, y);
+//       break;
+//     // case 'CRANEHOOK':
+//     //   this.addCraneHook(x, y);
+//     //   break;
+//     // case 'SLING':
+//     //   this.addSling(x, y);
+//     //   break;
+//   }
+// }
 
 addChain(x = 0, y = 0) {
   const chainId = crypto.randomUUID();
@@ -1271,4 +1288,218 @@ addRing(x = 0, y = 0) {
   
 }
 
+addLinkChain(x = 0, y = 0) {
+  const linkChainId = crypto.randomUUID();
+  const terminals: BeamTerminal[] = [];
+  const SCALE = 0.08; 
+
+
+  const imageObj = new Image();
+  imageObj.src = 'assets/connectors/link.png';
+
+  imageObj.onload = () => {
+    const linkChainGroup = new Konva.Group({
+      x,
+      y,
+      draggable: true,
+      id: linkChainId,
+    });
+
+    const linkChainImage = new Konva.Image({
+  image: imageObj,
+  x: 0,
+  y: 0,
+  scaleX: SCALE,
+  scaleY: SCALE,
+});
+
+
+    // Centramos la imagen
+    linkChainImage.offsetX((imageObj.width * SCALE) / 2);
+    linkChainImage.offsetY((imageObj.height * SCALE) / 2);
+
+
+    linkChainGroup.add(linkChainImage);
+
+    const width = imageObj.width;
+    const height = imageObj.height;
+    const scaledHeight = imageObj.height * SCALE;
+    // ---------- TERMINAL SUPERIOR ----------
+    const topTerminal: BeamTerminal = {
+      id: crypto.randomUUID(),
+      ownerId: linkChainId,
+      ownerType: 'LINKCHAIN',
+      type: 'TOP',
+      index: 0,
+      localX: (imageObj.width * SCALE) / 2 - 2,
+      localY: -(imageObj.height * SCALE) / 2 + 35,
+    };
+
+    terminals.push(topTerminal);
+    linkChainGroup.add(
+      this.createTerminal(
+        topTerminal.localX,
+        topTerminal.localY,
+        topTerminal
+      )
+    );
+
+    // ---------- TERMINAL INFERIOR ----------
+    const bottomTerminal: BeamTerminal = {
+      id: crypto.randomUUID(),
+      ownerId: linkChainId,
+      ownerType: 'LINKCHAIN',
+      type: 'BOTTOM',
+      index: 0,
+      localX: (imageObj.width * SCALE) / 2 - 2,
+      localY: (imageObj.height * SCALE) / 2 + 5,
+    };
+
+    terminals.push(bottomTerminal);
+    linkChainGroup.add(
+      this.createTerminal(
+        bottomTerminal.localX,
+        bottomTerminal.localY,
+        bottomTerminal
+      )
+    );
+
+    // Snap al soltar
+    linkChainGroup.on('dragend', () => {
+      linkChainGroup.position({
+        x: this.snapToGrid(linkChainGroup.x()),
+        y: this.snapToGrid(linkChainGroup.y()),
+      });
+      this.layer.batchDraw();
+    });
+    
+    linkChainGroup.on('dragmove', () => {
+      this.updateConnections();
+    });
+    linkChainGroup.on('click', e => {
+      e.cancelBubble = true; // evita pan
+      this.activeGroup = linkChainGroup;
+      this.selectGroup(linkChainGroup)
+    });
+
+    this.camera.add(linkChainGroup);
+
+    this.linkChains.push({
+      id: linkChainId,
+      group: linkChainGroup,
+      terminals,
+    });
+
+    this.layer.draw();
+    
+  };
+  
+}
+addHook(x = 0, y = 0) {
+  const hookId = crypto.randomUUID();
+  const terminals: BeamTerminal[] = [];
+  const SCALE = 0.2; 
+
+
+  const imageObj = new Image();
+  imageObj.src = 'assets/hooks/hook.png';
+
+  imageObj.onload = () => {
+    const hookGroup = new Konva.Group({
+      x,
+      y,
+      draggable: true,
+      id: hookId,
+    });
+
+    const hookImage = new Konva.Image({
+  image: imageObj,
+  x: 0,
+  y: 0,
+  scaleX: SCALE,
+  scaleY: SCALE,
+});
+
+
+    // Centramos la imagen
+    hookImage.offsetX((imageObj.width * SCALE) / 2);
+    hookImage.offsetY((imageObj.height * SCALE) / 2);
+
+
+    hookGroup.add(hookImage);
+
+    const width = imageObj.width;
+    const height = imageObj.height;
+    const scaledHeight = imageObj.height * SCALE;
+    // ---------- TERMINAL SUPERIOR ----------
+    const topTerminal: BeamTerminal = {
+      id: crypto.randomUUID(),
+      ownerId: hookId,
+      ownerType: 'HOOK',
+      type: 'TOP',
+      index: 0,
+      localX: (imageObj.width * SCALE)/2 - 8.5,
+      localY: -(imageObj.height * SCALE)/2 + 52, // ajuste fino después
+    };
+
+    terminals.push(topTerminal);
+    hookGroup.add(
+      this.createTerminal(
+        topTerminal.localX,
+        topTerminal.localY,
+        topTerminal
+      )
+    );
+
+    // ---------- TERMINAL INFERIOR ----------
+    const bottomTerminal: BeamTerminal = {
+      id: crypto.randomUUID(),
+      ownerId: hookId,
+      ownerType: 'HOOK',
+      type: 'BOTTOM',
+      index: 0,
+      localX: (imageObj.width * SCALE)/2 - 12,
+      localY: (imageObj.height * SCALE)/2 + 15, // centro del gancho
+    };
+
+    terminals.push(bottomTerminal);
+    hookGroup.add(
+      this.createTerminal(
+        bottomTerminal.localX,
+        bottomTerminal.localY,
+        bottomTerminal
+      )
+    );
+
+    // Snap al soltar
+    hookGroup.on('dragend', () => {
+      hookGroup.position({
+        x: this.snapToGrid(hookGroup.x()),
+        y: this.snapToGrid(hookGroup.y()),
+      });
+      this.layer.batchDraw();
+    });
+    
+    hookGroup.on('dragmove', () => {
+      this.updateConnections();
+    });
+    hookGroup.on('click', e => {
+      e.cancelBubble = true; // evita pan
+      this.activeGroup = hookGroup;
+      this.selectGroup(hookGroup)
+    });
+
+    this.camera.add(hookGroup);
+
+    this.hooks.push({
+      id: hookId,
+      group: hookGroup,
+      terminals,
+    });
+
+    this.layer.draw();
+    
+  };
+  
+}
 }

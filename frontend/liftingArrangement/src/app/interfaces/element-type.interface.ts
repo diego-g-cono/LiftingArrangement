@@ -1,12 +1,20 @@
 export type ElementType =
   | 'BEAM'
-  | 'HOOK'
+  | 'WIRE'
   | 'SLING'
   | 'CHAIN'
-  | 'SHACKLE';
+  | 'SHACKLE'
+  | 'HOOK'
+  | 'RING'
+  | 'LINKCHAIN'  
+  | 'CRANEHOOK';
 
 export interface ElementDefinition {
-  type: ElementType;
+  id: string;
   label: string;
-  icon: string;
+  preview: string;
+
+  /** tipo lógico, no acción */
+  type: ElementType;
 }
+

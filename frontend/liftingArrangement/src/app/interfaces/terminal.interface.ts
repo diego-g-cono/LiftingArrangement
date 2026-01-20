@@ -1,4 +1,4 @@
-export type TerminalOwner = 'BEAM' | 'CRANEHOOK' | 'SLING' | 'SHACKLE' | 'CHAIN' | 'WIRE' | 'RING';
+export type TerminalOwner = 'BEAM' | 'CRANEHOOK' | 'SLING' | 'SHACKLE' | 'CHAIN' | 'WIRE' | 'RING' | 'LINKCHAIN' | 'HOOK';
 
 export type TerminalType = 'TOP' | 'BOTTOM';
 

@@ -1,8 +1,9 @@
 <div
   #canvasContainer
   class="w-full h-full bg-slate-900 overflow-hidden"
+    (dragover)="onDragOver($event)"
+  (drop)="onDrop($event)"
 ></div>
-
 
 
 

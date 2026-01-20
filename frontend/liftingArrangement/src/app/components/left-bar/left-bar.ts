@@ -1,8 +1,32 @@
 import { Component } from '@angular/core';
+import { ELEMENT_CATALOG } from './element-catalog';
+import { CommonModule } from '@angular/common';
+import { ElementDefinition } from '../../interfaces/element-type.interface';
 
 @Component({
   selector: 'la-left-bar',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './left-bar.html',
 })
-export class LeftBar { }
+export class LeftBar {
+  catalog = ELEMENT_CATALOG;
+  openSection: string | null = null;
+
+  toggle(section: string) {
+    this.openSection = this.openSection === section ? null : section;
+  }
+
+onDragStart(event: DragEvent, item: ElementDefinition) {
+  if (!event.dataTransfer) return;
+
+  event.dataTransfer.setData(
+    'application/json',
+    JSON.stringify(item)
+  );
+
+  event.dataTransfer.effectAllowed = 'copy';
+}
+
+}
+
