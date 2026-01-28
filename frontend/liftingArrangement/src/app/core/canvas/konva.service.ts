@@ -286,7 +286,6 @@ addBeam(x = 0, y = 0) {
         localX: xPos,
         localY: yPos,
       };
-
       terminals.push(terminal);
       beamGroup.add(this.createTerminal(xPos, yPos, terminal));
 ;
@@ -321,7 +320,7 @@ addBeam(x = 0, y = 0) {
         localX: xPos,
         localY: yPos,
       };
-
+      console.log(i, terminal.type);
       terminals.push(terminal);
       beamGroup.add(this.createTerminal(xPos, yPos, terminal));
 ;
@@ -679,6 +678,18 @@ canConnect(a: BeamTerminal, b: BeamTerminal): boolean {
 
   if (a.ownerType === 'LINKCHAIN' && b.ownerType === 'HOOK') return true;
   if (a.ownerType === 'HOOK' && b.ownerType === 'LINKCHAIN') return true;
+
+  if (a.ownerType === 'SLING' && b.ownerType === 'HOOK') return true;
+  if (a.ownerType === 'HOOK' && b.ownerType === 'SLING') return true;
+
+  if (a.ownerType === 'WIRE' && b.ownerType === 'HOOK') return true;
+  if (a.ownerType === 'HOOK' && b.ownerType === 'WIRE') return true;
+
+  if (a.ownerType === 'CRANEHOOK' && b.ownerType === 'WIRE') return true;
+  if (a.ownerType === 'WIRE' && b.ownerType === 'CRANEHOOK') return true;
+
+  if (a.ownerType === 'CRANEHOOK' && b.ownerType === 'RING') return true;
+  if (a.ownerType === 'RING' && b.ownerType === 'CRANEHOOK') return true;
   
   return false;
 }
@@ -1502,4 +1513,47 @@ addHook(x = 0, y = 0) {
   };
   
 }
+
+deleteSelected() {
+  
+  if (this.activeTerminal) {
+  this.resetActiveTerminal();}
+
+  if (!this.selectedGroup) return;
+
+  const group = this.selectedGroup;
+  const id = group.id();
+
+  // 1️⃣ eliminar conexiones asociadas
+  this.connections = this.connections.filter(conn => {
+    const involved =
+      conn.from.ownerId === id || conn.to.ownerId === id;
+
+    if (involved) {
+      conn.shape.destroy();
+    }
+
+    return !involved;
+  });
+
+  // 2️⃣ eliminar de los arrays lógicos
+  this.beams = this.beams.filter(b => b.id !== id);
+  this.slings = this.slings.filter(s => s.id !== id);
+  this.craneHooks = this.craneHooks.filter(h => h.id !== id);
+  this.hooks = this.hooks.filter(h => h.id !== id);
+  this.wires = this.wires.filter(w => w.id !== id);
+  this.rings = this.rings.filter(r => r.id !== id);
+  this.shackles = this.shackles.filter(s => s.id !== id);
+  this.linkChains = this.linkChains.filter(l => l.id !== id);
+
+  // 3️⃣ destruir el group visual
+  group.destroy();
+
+  // 4️⃣ limpiar selección
+  this.clearSelection();
+  this.activeGroup = null;
+
+  this.layer.batchDraw();
+}
+
 }

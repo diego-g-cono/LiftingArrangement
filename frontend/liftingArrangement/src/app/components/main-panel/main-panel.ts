@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  HostListener,
   ViewChild,
 } from '@angular/core';
 import { KonvaService } from '../../core/canvas/konva.service';
@@ -20,7 +21,7 @@ export class MainPanel implements AfterViewInit {
   
   
 onDragOver(event: DragEvent) {
-  event.preventDefault(); // obligatorio
+  event.preventDefault();
   event.dataTransfer!.dropEffect = 'copy';
 }
 
@@ -55,13 +56,14 @@ onDrop(event: DragEvent) {
     // this.konva.addRing(100,100);
     // this.konva.addLinkChain(500,500);
     // this.konva.addHook(0,-300);
-
+    
 
     // resize automático
     new ResizeObserver(entries => {
       const { width, height } = entries[0].contentRect;
       this.konva.resize(width, height);
     }).observe(container);
+    
   }
   onDropElement(def: ElementDefinition, x: number, y: number) {
     console.log("onDropElement");
@@ -95,6 +97,12 @@ onDrop(event: DragEvent) {
       this.konva.addLinkChain(x, y);
       break;
   };
+}
+@HostListener('window:keydown', ['$event'])
+onKeyDown(event: KeyboardEvent) {
+  if (event.key === 'Delete' || event.key === 'Backspace') {
+    this.konva.deleteSelected();
+  }
 }
 
 }

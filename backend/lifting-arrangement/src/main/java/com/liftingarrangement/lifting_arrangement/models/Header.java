@@ -12,14 +12,14 @@ public class Header {
 
     @ManyToOne
     @JoinColumn(name="id_user")
-    private UserLA userLA;
+    private User user;
 
     private String date;
     private String product;
     private Integer quantity;
-    private Integer liftingPoints;
-    private Float maxLoad;
-    private Float unitLoad;
+    private Integer lifting_points;
+    private Float max_load;
+    private Float unit_load;
     private String operation;
     private String liftingBeamName;
     private Float liftingBeamCapacity;

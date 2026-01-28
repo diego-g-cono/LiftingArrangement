@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
-public class ChainSling {
+public class Shackle {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -17,8 +17,8 @@ public class ChainSling {
     private Brand brand;
 
     private Float capacity;
-    private Float length;
+    private Float weight;
 
-    @OneToMany(mappedBy="chainSling", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="liftingShackle", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<LiftingArrangement> liftingArrangements;
 }

@@ -16,7 +16,7 @@ public class Revision {
 
     @ManyToOne
     @JoinColumn(name = "id_controller")
-    private UserLA controller;
+    private User controller;
 
     /*@ManyToOne
     @JoinColumns({

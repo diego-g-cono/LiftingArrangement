@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
-public class LiftingRing {
+public class Ring {
     @Id
     @GeneratedValue
     private Long id;

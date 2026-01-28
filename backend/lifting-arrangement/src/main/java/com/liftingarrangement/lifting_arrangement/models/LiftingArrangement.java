@@ -3,31 +3,29 @@ package com.liftingarrangement.lifting_arrangement.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
-
 @Data
 @Entity
 public class LiftingArrangement {
 
-    @EmbeddedId
-    private LiftingArrangementId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
-    @MapsId("headerId")
     @ManyToOne
     @JoinColumn(name = "id_headerLA")
     private Header header;
 
     @ManyToOne
     @JoinColumn(name = "id_liftingBeam")
-    private LiftingBeam liftingBeam;
+    private Beam beam;
 
     @ManyToOne
     @JoinColumn(name = "id_liftingBeamEyebolt")
-    private LiftingBeamEyebolt liftingBeamEyebolt;
+    private Eyebolt eyebolt;
 
     @ManyToOne
     @JoinColumn(name = "id_liftingShackle")
-    private LiftingShackle liftingShackle;
+    private Shackle shackle;
 
     @ManyToOne
     @JoinColumn(name = "id_webbingSling")
@@ -35,7 +33,7 @@ public class LiftingArrangement {
 
     @ManyToOne
     @JoinColumn(name = "id_chainSling")
-    private ChainSling chainSling;
+    private Chain chain;
 
     @ManyToOne
     @JoinColumn(name = "id_wireSling")
@@ -47,11 +45,11 @@ public class LiftingArrangement {
 
     @ManyToOne
     @JoinColumn(name = "id_liftingHook")
-    private LiftingHook liftingHook;
+    private Hook hook;
 
     @ManyToOne
     @JoinColumn(name = "id_liftingRing")
-    private LiftingRing liftingRing;
+    private Ring ring;
 
     private Integer rootRow;
     private Integer rootColumn;

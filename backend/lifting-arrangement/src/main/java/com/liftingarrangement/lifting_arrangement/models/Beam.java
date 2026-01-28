@@ -1,0 +1,25 @@
+package com.liftingarrangement.lifting_arrangement.models;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.util.Set;
+
+@Data
+@Entity
+public class Beam {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
+    private String name;
+    private Float max_capacity;
+    private Float length;
+    private Float width;
+    private Float weight;
+
+    @OneToMany(mappedBy="beam", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Eyebolt> eyebolts;
+
+    @OneToMany(mappedBy="beam", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<LiftingArrangement> lifting_arrangements;
+}

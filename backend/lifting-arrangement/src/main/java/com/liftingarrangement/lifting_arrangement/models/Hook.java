@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
-public class LiftingHook {
+public class Hook {
     @Id
     @GeneratedValue
     private Long id;

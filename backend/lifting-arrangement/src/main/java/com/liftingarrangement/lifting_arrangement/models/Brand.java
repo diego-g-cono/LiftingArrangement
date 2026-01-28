@@ -14,20 +14,20 @@ public class Brand {
     private String name;
 
     @OneToMany(mappedBy="brand", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<LiftingShackle> liftingShackles;
+    private Set<Shackle> shackles;
 
     @OneToMany(mappedBy="brand", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<WebbingSling> webbingSlings;
+    private Set<WebbingSling> webbing_slings;
 
     @OneToMany(mappedBy="brand", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ChainSling> chainSlings;
+    private Set<Chain> chains;
 
     @OneToMany(mappedBy="brand", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<WireSling> wireSlings;
+    private Set<WireSling> wire_slings;
 
     @OneToMany(mappedBy="brand", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ConnectingLink> connectingLinks;
+    private Set<ConnectingLink> connecting_links;
 
     @OneToMany(mappedBy="brand", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<LiftingHook> liftingHooks;
+    private Set<Hook> hooks;
 }

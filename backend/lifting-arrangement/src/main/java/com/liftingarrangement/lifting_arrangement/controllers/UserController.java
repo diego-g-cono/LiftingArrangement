@@ -1,7 +1,7 @@
 package com.liftingarrangement.lifting_arrangement.controllers;
 
-import com.liftingarrangement.lifting_arrangement.models.UserLA;
-import com.liftingarrangement.lifting_arrangement.services.IUserLAService;
+import com.liftingarrangement.lifting_arrangement.models.User;
+import com.liftingarrangement.lifting_arrangement.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,23 +9,23 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/usersLA")
-public class UserLAController {
+public class UserController {
     @Autowired
-    private IUserLAService service;
+    private IUserService service;
 
     @GetMapping
-    public List<UserLA> getUsersLA(){
+    public List<User> getUsersLA(){
         return service.getUsersLA();
     }
 
     @GetMapping("{id}")
-    public UserLA getUserLA(@PathVariable("id")Long id){
+    public User getUserLA(@PathVariable("id")Long id){
         return service.getUserLA(id);
     }
 
     @PostMapping
-    public UserLA createUserLA(@RequestBody UserLA userLA){
-        return service.createUserLA(userLA);
+    public User createUserLA(@RequestBody User user){
+        return service.createUserLA(user);
     }
 
     @DeleteMapping("{id}")
@@ -34,7 +34,7 @@ public class UserLAController {
     }
 
     @PutMapping()
-    public UserLA updateUserLA(@RequestBody UserLA userLA){
-        return service.updateUserLA(userLA);
+    public User updateUserLA(@RequestBody User user){
+        return service.updateUserLA(user);
     }
 }
