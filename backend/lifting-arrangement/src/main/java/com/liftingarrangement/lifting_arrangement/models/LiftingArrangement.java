@@ -12,50 +12,52 @@ public class LiftingArrangement {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_headerLA")
+    @JoinColumn(name = "header_id")
     private Header header;
 
     @ManyToOne
-    @JoinColumn(name = "id_liftingBeam")
+    @JoinColumn(name = "beam_id")
     private Beam beam;
 
     @ManyToOne
-    @JoinColumn(name = "id_liftingBeamEyebolt")
+    @JoinColumn(name = "eyebolt_id")
     private Eyebolt eyebolt;
 
     @ManyToOne
-    @JoinColumn(name = "id_liftingShackle")
+    @JoinColumn(name = "shackle_id")
     private Shackle shackle;
 
     @ManyToOne
-    @JoinColumn(name = "id_webbingSling")
-    private WebbingSling webbingSling;
+    @JoinColumn(name = "webbing_sling_id")
+    private WebbingSling webbing_sling;
 
     @ManyToOne
-    @JoinColumn(name = "id_chainSling")
+    @JoinColumn(name = "chain_id")
     private Chain chain;
 
     @ManyToOne
-    @JoinColumn(name = "id_wireSling")
-    private WireSling wireSling;
+    @JoinColumn(name = "wire_sling_id")
+    private WireSling wire_sling;
 
     @ManyToOne
-    @JoinColumn(name = "id_connectingLink")
-    private ConnectingLink connectingLink;
+    @JoinColumn(name = "connecting_link_id")
+    private ConnectingLink connecting_link;
 
     @ManyToOne
-    @JoinColumn(name = "id_liftingHook")
+    @JoinColumn(name = "hook_id")
     private Hook hook;
 
     @ManyToOne
-    @JoinColumn(name = "id_liftingRing")
+    @JoinColumn(name = "ring_id")
     private Ring ring;
 
-    private Integer rootRow;
-    private Integer rootColumn;
-    private Integer rootPlane;
+    @ManyToOne
+    @JoinColumn(name = "crane_hook_id")
+    private CraneHook crane_hook;
+
     private Float angle;
     private String status;
+    private Float load;
 
     /*@OneToMany(mappedBy = "liftingArrangement", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Revision> revisions;*/

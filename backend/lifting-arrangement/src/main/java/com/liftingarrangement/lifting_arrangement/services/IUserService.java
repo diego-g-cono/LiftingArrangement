@@ -1,14 +1,14 @@
 package com.liftingarrangement.lifting_arrangement.services;
 
-import com.liftingarrangement.lifting_arrangement.models.User;
+import com.liftingarrangement.lifting_arrangement.models.UserLA;
 
 import java.util.List;
 
 public interface IUserService {
 
-    public User getUserLA(Long id);
-    public List<User> getUsersLA();
-    public User createUserLA(User user);
+    public UserLA getUserLA(Long id);
+    public List<UserLA> getUsersLA();
+    public UserLA createUserLA(UserLA userLA);
     public void deleteUserLA (Long id);
-    public User updateUserLA(User user);
+    public UserLA updateUserLA(UserLA userLA);
 }

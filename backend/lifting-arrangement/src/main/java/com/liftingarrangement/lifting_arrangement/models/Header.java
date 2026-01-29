@@ -11,8 +11,8 @@ public class Header {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="id_user")
-    private User user;
+    @JoinColumn(name="userLA_id")
+    private UserLA user_la;
 
     private String date;
     private String product;
@@ -21,12 +21,11 @@ public class Header {
     private Float max_load;
     private Float unit_load;
     private String operation;
-    private String liftingBeamName;
-    private Float liftingBeamCapacity;
 
-    /*@OneToMany(mappedBy="header", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<LiftingArrangement> liftingArrangements;*/
+    @ManyToOne
+    @JoinColumn(name="beam_id")
+    private Beam beam;
 
-    @OneToOne(mappedBy="header", cascade=CascadeType.ALL, orphanRemoval = true)
-    private Revision revision;
+    private Float beam_capacity;
+
 }

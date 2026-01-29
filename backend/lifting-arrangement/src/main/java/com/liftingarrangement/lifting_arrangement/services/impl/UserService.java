@@ -1,6 +1,6 @@
 package com.liftingarrangement.lifting_arrangement.services.impl;
 
-import com.liftingarrangement.lifting_arrangement.models.User;
+import com.liftingarrangement.lifting_arrangement.models.UserLA;
 import com.liftingarrangement.lifting_arrangement.repositories.UserRepository;
 import com.liftingarrangement.lifting_arrangement.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,24 +13,24 @@ class UserService implements IUserService {
     @Autowired
     private UserRepository repository;
 
-    public User getUserLA(Long id) {
+    public UserLA getUserLA(Long id) {
         return repository.findById(id).get();
     }
 
-    public List<User> getUsersLA(){
+    public List<UserLA> getUsersLA(){
         return repository.findAll();
     }
 
-    public User createUserLA(User user){
-        return repository.save(user);
+    public UserLA createUserLA(UserLA userLA){
+        return repository.save(userLA);
     }
 
     public void deleteUserLA (Long id){
         repository.deleteById(id);
     }
 
-    public User updateUserLA (User user){
-        return repository.save(user);
+    public UserLA updateUserLA (UserLA userLA){
+        return repository.save(userLA);
     }
 
 }

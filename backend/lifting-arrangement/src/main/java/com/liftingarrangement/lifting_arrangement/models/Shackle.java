@@ -13,12 +13,19 @@ public class Shackle {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_brand")
+    @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    private Float capacity;
+    private Float working_load;
     private Float weight;
+    private String code;
+    private Integer e;
+    private Integer b;
+    private Integer b1;
+    private Integer a;
+    private Integer d2;
+    private Integer c;
 
-    @OneToMany(mappedBy="liftingShackle", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<LiftingArrangement> liftingArrangements;
+    @OneToMany(mappedBy="shackle", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<LiftingArrangement> lifting_arrangements;
 }

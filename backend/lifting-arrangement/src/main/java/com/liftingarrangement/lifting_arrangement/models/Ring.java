@@ -13,11 +13,17 @@ public class Ring {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_brand")
+    @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    private Float capacity;
+    private Float working_load;
+    private String code;
+    private Integer d;
+    private Integer t;
+    private Integer w;
+    private Integer s;
+    private Float weight;
 
-    @OneToMany(mappedBy="liftingRing", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<LiftingArrangement> liftingArrangements;
+    @OneToMany(mappedBy="ring", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<LiftingArrangement> lifting_arrangements;
 }

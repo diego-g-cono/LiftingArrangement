@@ -13,11 +13,22 @@ public class Hook {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_brand")
+    @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    private Float capacity;
+    private Float working_load;
+    private String code;
+    private Integer e;
+    private Integer h;
+    private Integer a;
+    private Integer b;
+    private Integer d1;
+    private Integer d2;
+    private Integer g;
+    private Float s_max;
+    private Float weight;
 
-    @OneToMany(mappedBy="liftingHook", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<LiftingArrangement> liftingArrangements;
+    @OneToMany(mappedBy="hook", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<LiftingArrangement> lifting_arrangements;
+
 }

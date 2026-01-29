@@ -13,12 +13,12 @@ public class WireSling {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_brand")
+    @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    private Float capacity;
+    private Float working_load;
     private Float length;
 
-    @OneToMany(mappedBy="wireSling", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<LiftingArrangement> liftingArrangements;
+    @OneToMany(mappedBy="wire_sling", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<LiftingArrangement> lifting_arrangements;
 }
