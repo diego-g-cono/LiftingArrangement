@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@Table(name = "hooks")
 public class Hook {
     @Id
     @GeneratedValue

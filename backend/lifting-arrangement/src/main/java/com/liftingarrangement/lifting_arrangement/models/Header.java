@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
+@Table(name = "headers")
 public class Header {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

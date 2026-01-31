@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@Table(name = "eyebolts")
 public class Eyebolt {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

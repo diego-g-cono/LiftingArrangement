@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@Table(name = "shackles")
 public class Shackle {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

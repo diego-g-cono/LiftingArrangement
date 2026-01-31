@@ -13,23 +13,23 @@ class BeamService implements IBeamService {
     @Autowired
     private BeamRepository repository;
 
-    public Beam getLiftingBeam(Long id) {
+    public Beam getBeam(Long id) {
         return repository.findById(id).get();
     }
 
-    public List<Beam> getLiftingBeams() {
+    public List<Beam> getBeams() {
         return repository.findAll();
     }
 
-    public Beam createLiftingBeam(Beam beam) {
+    public Beam createBeam(Beam beam) {
         return repository.save(beam);
     }
 
-    public void deleteLiftingBeam(Long id) {
+    public void deleteBeam(Long id) {
         repository.deleteById(id);
     }
 
-    public Beam updateLiftingBeam(Beam beam) {
+    public Beam updateBeam(Beam beam) {
         return repository.save(beam);
     }
 }

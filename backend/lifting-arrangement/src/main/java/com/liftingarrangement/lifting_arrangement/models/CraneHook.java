@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Entity
 @Data
+@Table(name = "crane_hooks")
 public class CraneHook {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

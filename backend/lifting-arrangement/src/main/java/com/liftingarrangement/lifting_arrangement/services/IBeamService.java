@@ -5,9 +5,9 @@ import com.liftingarrangement.lifting_arrangement.models.Beam;
 import java.util.List;
 
 public interface IBeamService {
-    public Beam getLiftingBeam(Long id);
-    public List<Beam> getLiftingBeams();
-    public Beam createLiftingBeam(Beam beam);
-    public void deleteLiftingBeam (Long id);
-    public Beam updateLiftingBeam(Beam beam);
+    public Beam getBeam(Long id);
+    public List<Beam> getBeams();
+    public Beam createBeam(Beam beam);
+    public void deleteBeam(Long id);
+    public Beam updateBeam(Beam beam);
 }

@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@Table(name = "chains")
 public class Chain {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

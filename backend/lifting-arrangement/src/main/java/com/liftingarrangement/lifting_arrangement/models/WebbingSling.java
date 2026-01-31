@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@Table(name = "webbing_slings")
 public class WebbingSling {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

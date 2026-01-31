@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@Table(name = "connecting_link")
 public class ConnectingLink {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

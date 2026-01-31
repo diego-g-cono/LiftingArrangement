@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
+@Table(name = "rings")
 public class Ring {
     @Id
     @GeneratedValue
