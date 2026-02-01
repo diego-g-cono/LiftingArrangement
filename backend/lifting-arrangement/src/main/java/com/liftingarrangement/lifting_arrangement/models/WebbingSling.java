@@ -10,7 +10,7 @@ import java.util.Set;
 @Table(name = "webbing_slings")
 public class WebbingSling {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

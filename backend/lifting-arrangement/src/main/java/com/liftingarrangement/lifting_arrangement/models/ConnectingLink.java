@@ -1,5 +1,6 @@
 package com.liftingarrangement.lifting_arrangement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,7 +11,7 @@ import java.util.Set;
 @Table(name = "connecting_link")
 public class ConnectingLink {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -28,6 +29,7 @@ public class ConnectingLink {
     private Integer g;
     private Float weight;
 
+    @JsonIgnore
     @OneToMany(mappedBy="connecting_link", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<LiftingArrangement> lifting_arrangements;
 }

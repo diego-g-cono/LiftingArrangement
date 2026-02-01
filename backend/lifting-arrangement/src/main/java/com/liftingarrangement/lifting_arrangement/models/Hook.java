@@ -10,7 +10,7 @@ import java.util.Set;
 @Table(name = "hooks")
 public class Hook {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

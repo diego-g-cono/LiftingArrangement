@@ -10,7 +10,7 @@ import java.util.Set;
 @Table(name = "rings")
 public class Ring {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

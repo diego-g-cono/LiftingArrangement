@@ -8,7 +8,7 @@ import lombok.Data;
 @Table(name = "headers")
 public class Header {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

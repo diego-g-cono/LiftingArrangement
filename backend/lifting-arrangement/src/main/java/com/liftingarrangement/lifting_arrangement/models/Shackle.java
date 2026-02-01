@@ -10,7 +10,7 @@ import java.util.Set;
 @Table(name = "shackles")
 public class Shackle {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

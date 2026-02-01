@@ -14,27 +14,27 @@ public class BeamController {
     private IBeamService service;
 
     @GetMapping
-    public List<Beam> getLiftingBeams(){
+    public List<Beam> getBeams(){
         return service.getBeams();
     }
 
     @GetMapping("{id}")
-    public Beam getLiftingBeam(@PathVariable("id") Long id){
+    public Beam getBeam(@PathVariable("id") Long id){
         return service.getBeam(id);
     }
 
     @PostMapping
-    public Beam createLiftingBeam(@RequestBody Beam beam){
+    public Beam createBeam(@RequestBody Beam beam){
         return service.createBeam(beam);
     }
 
     @DeleteMapping("{id}")
-    public void deleteLiftingBeam(@PathVariable("id")Long id){
+    public void deleteBeam(@PathVariable("id")Long id){
         service.deleteBeam(id);
     }
 
     @PutMapping
-    public Beam updateLiftingBeam(@RequestBody Beam beam){
+    public Beam updateBeam(@RequestBody Beam beam){
         return service.updateBeam(beam);
     }
 }

@@ -11,7 +11,7 @@ import java.util.Set;
 @Table(name = "users")
 public class UserLA {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String password;
