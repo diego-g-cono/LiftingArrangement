@@ -1,5 +1,6 @@
 package com.liftingarrangement.lifting_arrangement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -27,6 +28,7 @@ public class Shackle {
     private Integer d2;
     private Integer c;
 
+    @JsonIgnore
     @OneToMany(mappedBy="shackle", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<LiftingArrangement> lifting_arrangements;
 }

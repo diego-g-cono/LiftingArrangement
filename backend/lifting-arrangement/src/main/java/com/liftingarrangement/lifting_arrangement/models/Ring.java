@@ -1,5 +1,6 @@
 package com.liftingarrangement.lifting_arrangement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -25,6 +26,7 @@ public class Ring {
     private Integer s;
     private Float weight;
 
+    @JsonIgnore
     @OneToMany(mappedBy="ring", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<LiftingArrangement> lifting_arrangements;
 }

@@ -1,5 +1,6 @@
 package com.liftingarrangement.lifting_arrangement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,6 +21,7 @@ public class WebbingSling {
     private Float working_load;
     private Float length;
 
+    @JsonIgnore
     @OneToMany(mappedBy="webbing_sling", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<LiftingArrangement> lifting_arrangements;
 }
