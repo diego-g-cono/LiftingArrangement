@@ -12,7 +12,7 @@ public class Header {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="userLA_id")
+    @JoinColumn(name="user_id")
     private UserLA user_la;
 
     private String date;
