@@ -1,11 +1,15 @@
 package com.liftingarrangement.lifting_arrangement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "wire_slings")
 public class WireSling {
@@ -20,6 +24,7 @@ public class WireSling {
     private Float working_load;
     private Float length;
 
+    @JsonIgnore
     @OneToMany(mappedBy="wire_sling", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<LiftingArrangement> lifting_arrangements;
 }

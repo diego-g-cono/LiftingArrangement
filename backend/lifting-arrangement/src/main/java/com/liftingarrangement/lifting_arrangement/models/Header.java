@@ -1,9 +1,12 @@
 package com.liftingarrangement.lifting_arrangement.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "headers")
 public class Header {
