@@ -1,43 +1,24 @@
-<header class="h-12 bg-slate-800 text-white flex items-center justify-between px-4 select-none">
-
-  <!-- Left: Logo + Menú -->
-  <div class="flex items-center gap-6">
-
-    <!-- Logo -->
-    <div class="flex items-center gap-2">
-      <img
-        src="logo.png"
-        alt="Logo"
-        class="h-12 w-auto"
-      />
-    </div>
-
-    <!-- Menú -->
-    <nav class="flex items-center gap-4 text-sm text-slate-300">
-      <button class="hover:text-white">File</button>
-      <button class="hover:text-white">Edit</button>
-      <button class="hover:text-white">View</button>
-      <button class="hover:text-white">Tools</button>
-      <button class="hover:text-white">Simulate</button>
-      <button class="hover:text-white">Help</button>
-    </nav>
-
-  </div>
-
-  <!-- Right: Usuario (mock) -->
-  <div class="flex items-center gap-3 text-sm text-slate-300">
-
-    <span>
-      Usuario
-    </span>
-
+<nav class="flex items-center h-14 bg-slate-900 text-slate-200 px-4 gap-4">
+  <div class="relative">
     <button
-      class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded text-white"
+      class="hover:text-white"
+      (click)="toggleFileMenu()"
     >
-      Logout
+      File
     </button>
 
+    <div
+      *ngIf="fileMenuOpen"
+      class="absolute top-full left-0 mt-1 bg-slate-800 border border-slate-700 rounded shadow"
+    >
+      <button
+        class="block px-4 py-2 hover:bg-slate-700 w-full text-left"
+        (click)="newProject()"
+      >
+        New…
+      </button>
+    </div>
   </div>
+</nav>
 
-</header>
 

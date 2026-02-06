@@ -4,13 +4,15 @@ import { Beam } from '../../interfaces/beam.interface';
 import { BeamTerminal } from '../../interfaces/terminal.interface';
 import { CraneHook } from '../../interfaces/crane-hook.interface';
 import { Connection } from '../../interfaces/connection.interface';
-import { Sling } from '../../interfaces/sling.interface';
 import { ElementType } from '../../interfaces/element-type.interface';
-import { Shackle } from '../../interfaces/shackle.interface';
+import { CanvasShackle } from '../../interfaces/shackle.interface';
 import { WireSling } from '../../interfaces/wire-sling.interface';
 import { Ring } from '../../interfaces/ring.interface';
 import { LinkChain } from '../../interfaces/link-chain.interface';
 import { Hook } from '../../interfaces/hook.interface';
+import { ShacklePanelService } from '../../services/shackle-panel.service';
+import { CanvasSling } from '../../interfaces/sling.interface';
+import { SlingPanelService } from '../../services/sling-panel.service';
 
 
 @Injectable({ providedIn: 'root' })
@@ -24,12 +26,12 @@ export class KonvaService {
   gridSize = 40;
   beams: Beam[] = [];
   craneHooks: CraneHook[] = [];
-  slings: Sling[] = [];
+  slings: CanvasSling[] = [];
   connections: Connection[] = [];
-  shackle: Shackle[] = [];
+  shackle: CanvasShackle[] = [];
   rings: Ring[] = [];
   wires: WireSling[] = [];
-  shackles : Shackle[] = [];
+  shackles : CanvasShackle[] = [];
   linkChains: LinkChain[] = [];
   hooks: Hook[] = [];
 
@@ -41,6 +43,10 @@ export class KonvaService {
   selectedGroup: Konva.Group | null = null;
   selectionRect: Konva.Rect | null = null;
 
+  constructor(
+  private shacklePanelService: ShacklePanelService,
+  private slingPanelService: SlingPanelService
+) {}
 
 
   init(container: HTMLDivElement) {
@@ -208,19 +214,20 @@ private initZoom() {
     this.layer.draw();
     }
 
-addBeam(x = 0, y = 0) {
-  const beamId = crypto.randomUUID(); // 🔹 ID del beam
+addBeam(x = 0, y = 0, beamDbId: number = 0) {
+  // 🔹 ID gráfico (canvas / Konva)
+  const canvasId = crypto.randomUUID();
   const terminals: BeamTerminal[] = [];
 
   const imageObj = new Image();
   imageObj.src = 'assets/beams/percha-integral.png';
-  
+
   imageObj.onload = () => {
     const beamGroup = new Konva.Group({
       x,
       y,
       draggable: true,
-      id: beamId,
+      id: canvasId, // 🔹 SOLO canvasId
     });
 
     const beamImage = new Konva.Image({
@@ -234,7 +241,7 @@ addBeam(x = 0, y = 0) {
 
     beamGroup.add(beamImage);
 
-    // Snap al soltar
+    // ---------- Drag & Snap ----------
     beamGroup.on('dragend', () => {
       beamGroup.position({
         x: this.snapToGrid(beamGroup.x()),
@@ -242,25 +249,23 @@ addBeam(x = 0, y = 0) {
       });
       this.layer.batchDraw();
     });
-      beamGroup.on('dragmove', () => {
-    this.updateConnections();
-  });
-  beamGroup.on('click', e => {
-  e.cancelBubble = true; // evita pan
-  this.activeGroup = beamGroup;
-  this.selectGroup(beamGroup)
-});
+
+    beamGroup.on('dragmove', () => {
+      this.updateConnections();
+    });
+
+    beamGroup.on('click', e => {
+      e.cancelBubble = true;
+      this.activeGroup = beamGroup;
+      this.selectGroup(beamGroup);
+    });
 
     this.camera.add(beamGroup);
 
     const width = imageObj.width;
     const height = imageObj.height;
 
-    let xPos: number;
-    let yPos: number;
-    let index = 0;
-
-    // ---------- SUPERIORES (8) ----------
+    // ---------- TERMINALES SUPERIORES ----------
     const topPositions = [
       26.5,
       26.5 + 145.5,
@@ -272,26 +277,26 @@ addBeam(x = 0, y = 0) {
       width - 26.5 - 476.5,
     ];
 
-    yPos = -height / 3;
+    let yPos = -height / 3;
 
     topPositions.forEach((offset, i) => {
-      xPos = offset - width / 2;
+      const xPos = offset - width / 2;
 
       const terminal: BeamTerminal = {
         id: crypto.randomUUID(),
-        ownerId: beamId,
+        ownerCanvasId: canvasId,
         ownerType: 'BEAM',
         type: 'TOP',
         index: i,
         localX: xPos,
         localY: yPos,
       };
+
       terminals.push(terminal);
       beamGroup.add(this.createTerminal(xPos, yPos, terminal));
-;
     });
 
-    // ---------- INFERIORES (11) ----------
+    // ---------- TERMINALES INFERIORES ----------
     const bottomPositions = [
       26.5,
       26.5 + 145.5,
@@ -309,36 +314,34 @@ addBeam(x = 0, y = 0) {
     yPos = height / 3;
 
     bottomPositions.forEach((offset, i) => {
-      xPos = offset - width / 2;
+      const xPos = offset - width / 2;
 
       const terminal: BeamTerminal = {
         id: crypto.randomUUID(),
-        ownerId: beamId,
+        ownerCanvasId: canvasId,
         ownerType: 'BEAM',
         type: 'BOTTOM',
         index: i,
         localX: xPos,
         localY: yPos,
       };
-      console.log(i, terminal.type);
+
       terminals.push(terminal);
       beamGroup.add(this.createTerminal(xPos, yPos, terminal));
-;
     });
 
-    // 🔹 Registrar beam completo
+    // ---------- REGISTRO FINAL ----------
     this.beams.push({
-      id: beamId,
+      id: beamDbId,        // 🔵 ID de base de datos
+      canvasId,            // 🟢 ID gráfico
       group: beamGroup,
-      terminals,
+      terminals
     });
 
     this.layer.draw();
-    //console.log(this.beams[0]);
   };
-  
-
 }
+
 
 
 snapToGrid(value: number): number {
@@ -410,8 +413,9 @@ createTerminal(
   });
   
 }
-rotateBeam(beamId: string, direction: 'CW' | 'CCW') {
-  const beam = this.beams.find(b => b.id === beamId);
+rotateBeam(beamCanvasId: string, direction: 'CW' | 'CCW') {
+  const beam = this.beams.find(b => b.canvasId === beamCanvasId);
+  
   if (!beam) return;
 
   const currentRotation = beam.group.rotation();
@@ -477,7 +481,7 @@ addCraneHook(x = 0, y = 0) {
     // ---------- TERMINAL SUPERIOR ----------
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: craneHookId,
+      ownerCanvasId: craneHookId,
       ownerType: 'CRANEHOOK',
       type: 'TOP',
       index: 0,
@@ -497,7 +501,7 @@ addCraneHook(x = 0, y = 0) {
     // ---------- TERMINAL INFERIOR ----------
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: craneHookId,
+      ownerCanvasId: craneHookId,
       ownerType: 'CRANEHOOK',
       type: 'BOTTOM',
       index: 0,
@@ -545,35 +549,39 @@ addCraneHook(x = 0, y = 0) {
   };
   
 }
+
+
 addSling(x = 0, y = 0) {
-  const slingId = crypto.randomUUID();
+  const canvasId = crypto.randomUUID();
   const terminals: BeamTerminal[] = [];
 
   const SCALE = 0.3;
-
   const imageObj = new Image();
   imageObj.src = 'assets/slings/sling-yellow.png';
 
   imageObj.onload = () => {
+
     const slingGroup = new Konva.Group({
       x,
       y,
       draggable: true,
-      id: slingId,
+      id: canvasId,
     });
 
+    // =========================
+    // IMAGEN
+    // =========================
     const slingImage = new Konva.Image({
       image: imageObj,
       x: 0,
       y: 0,
       offsetY: imageObj.height / 2,
-      scaleY: SCALE,
       scaleX: SCALE,
+      scaleY: SCALE,
     });
 
     slingGroup.add(slingImage);
 
-    // 🔹 altura visual real
     const visualHeight = imageObj.height * SCALE;
 
     // =========================
@@ -581,7 +589,7 @@ addSling(x = 0, y = 0) {
     // =========================
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: slingId,
+      ownerCanvasId: canvasId,
       ownerType: 'SLING',
       type: 'TOP',
       index: 0,
@@ -603,7 +611,7 @@ addSling(x = 0, y = 0) {
     // =========================
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: slingId,
+      ownerCanvasId: canvasId,
       ownerType: 'SLING',
       type: 'BOTTOM',
       index: 1,
@@ -619,29 +627,52 @@ addSling(x = 0, y = 0) {
 
     slingGroup.add(bottomCircle);
     terminals.push(bottomTerminal);
-      slingGroup.on('dragmove', () => {
-    this.updateConnections();
-  });
-
-  slingGroup.on('click', e => {
-  e.cancelBubble = true; // evita pan
-  this.activeGroup = slingGroup;
-  this.selectGroup(slingGroup)
-});
 
     // =========================
+    // MODELO CANVAS
+    // =========================
+    const sling: CanvasSling = {
+      canvasId,
+      group: slingGroup,
+      terminals,
+      slingId: undefined,
+      properties: undefined,
+    };
 
+    // =========================
+    // EVENTOS
+    // =========================
+    slingGroup.on('dragmove', () => {
+      this.updateConnections();
+    });
+
+    slingGroup.on('click', e => {
+      e.cancelBubble = true;
+      this.activeGroup = slingGroup;
+      this.selectGroup(slingGroup);
+    });
+
+    slingGroup.on('dblclick', e => {
+      e.cancelBubble = true;
+      this.openSlingProperties(sling);
+    });
+
+    // =========================
+    // ADD AL CANVAS
+    // =========================
+    this.slings.push(sling);
     this.camera.add(slingGroup);
     this.layer.batchDraw();
 
-    this.slings.push({
-      id: slingId,
-      group: slingGroup,
-      terminals,
-    });
+    // opcional
+    this.openSlingProperties(sling);
   };
-
 }
+
+openSlingProperties(sling: CanvasSling) {
+  this.slingPanelService.open(sling);
+}
+
 
 
 canConnect(a: BeamTerminal, b: BeamTerminal): boolean {
@@ -649,7 +680,7 @@ canConnect(a: BeamTerminal, b: BeamTerminal): boolean {
   if (a.id === b.id) return false;
 
   // mismo elemento
-  if (a.ownerId === b.ownerId) return false;
+  if (a.ownerCanvasId === b.ownerCanvasId) return false;
 
   // mismo tipo (TOP–TOP o BOTTOM–BOTTOM)
   //if (a.type === b.type) return false;
@@ -706,7 +737,7 @@ finishConnection(target: BeamTerminal) {
   }
   // validaciones (ya las tenés)
   if (source.id === target.id) return this.resetActiveTerminal();
-  if (source.ownerId === target.ownerId) return this.resetActiveTerminal();
+  if (source.ownerCanvasId === target.ownerCanvasId) return this.resetActiveTerminal();
   //if (source.type === target.type) return this.resetActiveTerminal();
 
   const p1 = this.getTerminalWorldPosition(source);
@@ -735,7 +766,7 @@ finishConnection(target: BeamTerminal) {
 
 
 getTerminalAbsPosition(terminal: BeamTerminal): { x: number; y: number } {
-  const group = this.findGroupByOwnerId(terminal.ownerId);
+  const group = this.findGroupByOwnerId(terminal.ownerCanvasId);
   if (!group) return { x: 0, y: 0 };
 
   const point = group.getAbsoluteTransform().point({
@@ -746,16 +777,16 @@ getTerminalAbsPosition(terminal: BeamTerminal): { x: number; y: number } {
   return point;
 }
 
-findGroupByOwnerId(ownerId: string): Konva.Group | null {
+findGroupByOwnerId(ownerCanvasId: string): Konva.Group | null {
   return (
-    this.beams.find(b => b.id === ownerId)?.group ||
-    this.craneHooks.find(ch => ch.id === ownerId)?.group ||
-    this.slings.find(s => s.id === ownerId)?.group ||
-    this.wires.find(w => w.id === ownerId)?.group ||
-    this.rings.find(r => r.id === ownerId)?.group ||
-    this.shackles.find(sh => sh.id === ownerId)?.group ||
-    this.linkChains.find(lc => lc.id === ownerId)?.group ||
-    this.hooks.find(h => h.id === ownerId)?.group ||
+    this.beams.find(b => b.canvasId === ownerCanvasId)?.group ||
+    this.craneHooks.find(ch => ch.id === ownerCanvasId)?.group ||
+    this.slings.find(s => s.canvasId === ownerCanvasId)?.group ||
+    this.wires.find(w => w.id === ownerCanvasId)?.group ||
+    this.rings.find(r => r.id === ownerCanvasId)?.group ||
+    this.shackles.find(sh => sh.canvasId === ownerCanvasId)?.group ||
+    this.linkChains.find(lc => lc.id === ownerCanvasId)?.group ||
+    this.hooks.find(h => h.id === ownerCanvasId)?.group ||
     null
   );
 }
@@ -788,7 +819,7 @@ resetActiveTerminal() {
   this.layer.batchDraw();
 }
 getTerminalWorldPosition(terminal: BeamTerminal): { x: number; y: number } {
-  const group = this.findGroupByOwnerId(terminal.ownerId);
+  const group = this.findGroupByOwnerId(terminal.ownerCanvasId);
   if (!group) throw new Error('Group not found');
 
   return group.getAbsoluteTransform().point({
@@ -925,7 +956,7 @@ addChain(x = 0, y = 0) {
     // =========================
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: chainId,
+      ownerCanvasId: chainId,
       ownerType: 'CHAIN',
       type: 'TOP',
       index: 0,
@@ -947,7 +978,7 @@ addChain(x = 0, y = 0) {
     // =========================
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: chainId,
+      ownerCanvasId: chainId,
       ownerType: 'CHAIN',
       type: 'BOTTOM',
       index: 1,
@@ -979,7 +1010,7 @@ addChain(x = 0, y = 0) {
     this.layer.batchDraw();
 
     this.slings.push({
-      id: chainId,
+      canvasId: chainId,
       group: chainGroup,
       terminals,
     });
@@ -988,10 +1019,9 @@ addChain(x = 0, y = 0) {
 }
 
 addShackle(x = 0, y = 0) {
-  const shackleId = crypto.randomUUID();
+  const canvasId = crypto.randomUUID();
   const terminals: BeamTerminal[] = [];
-  const SCALE = 0.15; 
-
+  const SCALE = 0.15;
 
   const imageObj = new Image();
   imageObj.src = 'assets/shackles/shackle.png';
@@ -1001,32 +1031,26 @@ addShackle(x = 0, y = 0) {
       x,
       y,
       draggable: true,
-      id: shackleId,
+      id: canvasId, // 🔵 SOLO canvasId
     });
 
     const shackleImage = new Konva.Image({
-  image: imageObj,
-  x: 0,
-  y: 0,
-  scaleX: SCALE,
-  scaleY: SCALE,
-});
+      image: imageObj,
+      scaleX: SCALE,
+      scaleY: SCALE,
+    });
 
-
-    // Centramos la imagen
     shackleImage.offsetX((imageObj.width * SCALE) / 2);
     shackleImage.offsetY((imageObj.height * SCALE) / 2);
 
-
     shackleGroup.add(shackleImage);
 
-    const width = imageObj.width;
-    const height = imageObj.height;
-    const scaledHeight = imageObj.height * SCALE;
-    // ---------- TERMINAL SUPERIOR ----------
+    // =========================
+    // TERMINAL SUPERIOR
+    // =========================
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: shackleId,
+      ownerCanvasId: canvasId,
       ownerType: 'SHACKLE',
       type: 'TOP',
       index: 0,
@@ -1043,10 +1067,12 @@ addShackle(x = 0, y = 0) {
       )
     );
 
-    // ---------- TERMINAL INFERIOR ----------
+    // =========================
+    // TERMINAL INFERIOR
+    // =========================
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: shackleId,
+      ownerCanvasId: canvasId,
       ownerType: 'SHACKLE',
       type: 'BOTTOM',
       index: 0,
@@ -1063,7 +1089,9 @@ addShackle(x = 0, y = 0) {
       )
     );
 
-    // Snap al soltar
+    // =========================
+    // EVENTOS
+    // =========================
     shackleGroup.on('dragend', () => {
       shackleGroup.position({
         x: this.snapToGrid(shackleGroup.x()),
@@ -1071,29 +1099,47 @@ addShackle(x = 0, y = 0) {
       });
       this.layer.batchDraw();
     });
-    
+
     shackleGroup.on('dragmove', () => {
       this.updateConnections();
     });
+
     shackleGroup.on('click', e => {
-      e.cancelBubble = true; // evita pan
+      e.cancelBubble = true;
       this.activeGroup = shackleGroup;
-      this.selectGroup(shackleGroup)
+      this.selectGroup(shackleGroup);
     });
 
-    this.camera.add(shackleGroup);
+    // 👉 DOBLE CLICK → editar propiedades
+    shackleGroup.on('dblclick', e => {
+      e.cancelBubble = true;
+      this.openShackleProperties(shackle);
+    });
 
-    this.shackles.push({
-      id: shackleId,
+    // =========================
+    // REGISTRO LÓGICO
+    // =========================
+    const shackle: CanvasShackle = {
+      canvasId,
       group: shackleGroup,
       terminals,
-    });
+      shackleId: undefined,   // 🔴 todavía no asignado
+      properties: undefined,  // 🔴 todavía no asignado
+    };
 
+    this.shackles.push(shackle);
+    this.camera.add(shackleGroup);
     this.layer.draw();
-    
+
+    // 👉 OPCIONAL: abrir panel automáticamente
+    this.openShackleProperties(shackle);
   };
-  
 }
+openShackleProperties(shackle: CanvasShackle) {
+  this.shacklePanelService.open(shackle);
+}
+
+
 addWire(x = 0, y = 0) {
   const wireId = crypto.randomUUID();
   const terminals: BeamTerminal[] = [];
@@ -1130,7 +1176,7 @@ addWire(x = 0, y = 0) {
     // =========================
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: wireId,
+      ownerCanvasId: wireId,
       ownerType: 'WIRE',
       type: 'TOP',
       index: 0,
@@ -1152,7 +1198,7 @@ addWire(x = 0, y = 0) {
     // =========================
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: wireId,
+      ownerCanvasId: wireId,
       ownerType: 'WIRE',
       type: 'BOTTOM',
       index: 1,
@@ -1230,7 +1276,7 @@ addRing(x = 0, y = 0) {
     // ---------- TERMINAL SUPERIOR ----------
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: ringId,
+      ownerCanvasId: ringId,
       ownerType: 'RING',
       type: 'TOP',
       index: 0,
@@ -1250,7 +1296,7 @@ addRing(x = 0, y = 0) {
     // ---------- TERMINAL INFERIOR ----------
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: ringId,
+      ownerCanvasId: ringId,
       ownerType: 'RING',
       type: 'BOTTOM',
       index: 0,
@@ -1338,7 +1384,7 @@ addLinkChain(x = 0, y = 0) {
     // ---------- TERMINAL SUPERIOR ----------
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: linkChainId,
+      ownerCanvasId: linkChainId,
       ownerType: 'LINKCHAIN',
       type: 'TOP',
       index: 0,
@@ -1358,7 +1404,7 @@ addLinkChain(x = 0, y = 0) {
     // ---------- TERMINAL INFERIOR ----------
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: linkChainId,
+      ownerCanvasId: linkChainId,
       ownerType: 'LINKCHAIN',
       type: 'BOTTOM',
       index: 0,
@@ -1445,7 +1491,7 @@ addHook(x = 0, y = 0) {
     // ---------- TERMINAL SUPERIOR ----------
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: hookId,
+      ownerCanvasId: hookId,
       ownerType: 'HOOK',
       type: 'TOP',
       index: 0,
@@ -1465,7 +1511,7 @@ addHook(x = 0, y = 0) {
     // ---------- TERMINAL INFERIOR ----------
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
-      ownerId: hookId,
+      ownerCanvasId: hookId,
       ownerType: 'HOOK',
       type: 'BOTTOM',
       index: 0,
@@ -1527,7 +1573,7 @@ deleteSelected() {
   // 1️⃣ eliminar conexiones asociadas
   this.connections = this.connections.filter(conn => {
     const involved =
-      conn.from.ownerId === id || conn.to.ownerId === id;
+      conn.from.ownerCanvasId === id || conn.to.ownerCanvasId === id;
 
     if (involved) {
       conn.shape.destroy();
@@ -1537,13 +1583,13 @@ deleteSelected() {
   });
 
   // 2️⃣ eliminar de los arrays lógicos
-  this.beams = this.beams.filter(b => b.id !== id);
-  this.slings = this.slings.filter(s => s.id !== id);
+  this.beams = this.beams.filter(b => b.canvasId !== id);
+  this.slings = this.slings.filter(s => s.canvasId !== id);
   this.craneHooks = this.craneHooks.filter(h => h.id !== id);
   this.hooks = this.hooks.filter(h => h.id !== id);
   this.wires = this.wires.filter(w => w.id !== id);
   this.rings = this.rings.filter(r => r.id !== id);
-  this.shackles = this.shackles.filter(s => s.id !== id);
+  this.shackles = this.shackles.filter(s => s.canvasId !== id);
   this.linkChains = this.linkChains.filter(l => l.id !== id);
 
   // 3️⃣ destruir el group visual
