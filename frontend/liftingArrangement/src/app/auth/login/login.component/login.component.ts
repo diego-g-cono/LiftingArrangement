@@ -1,0 +1,41 @@
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../auth.service';
+
+@Component({
+  selector: 'la-login',
+  standalone: true,
+  templateUrl: './login.component.html',
+  imports: [
+    CommonModule,   // 👈 NgIf, NgFor
+    FormsModule     // 👈 ngModel
+  ]
+})
+export class LoginComponent {
+
+  email = '';
+  password = '';
+  error = '';
+
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+login() {
+  this.authService.login({
+    email: this.email,
+    password: this.password
+  }).subscribe({
+    next: () => {
+      this.router.navigate(['/app']); // 👈 SOLO AQUÍ
+    },
+    error: () => {
+      this.error = 'Usuario o contraseña incorrectos';
+    }
+  });
+}
+
+}

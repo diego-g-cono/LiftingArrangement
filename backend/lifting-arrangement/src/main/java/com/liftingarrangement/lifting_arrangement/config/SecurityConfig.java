@@ -45,7 +45,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 🔐 AuthenticationManager (ESTO FALTABA)
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration config
