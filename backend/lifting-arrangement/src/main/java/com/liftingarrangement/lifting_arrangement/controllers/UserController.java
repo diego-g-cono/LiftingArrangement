@@ -14,9 +14,7 @@ public class UserController {
     private IUserService service;
 
     @GetMapping
-    public List<UserLA> getUsersLA(){
-        return service.getUsersLA();
-    }
+    public List<UserLA> getUsersLA(){return service.getUsersLA();}
 
     @GetMapping("{id}")
     public UserLA getUserLA(@PathVariable("id")Long id){

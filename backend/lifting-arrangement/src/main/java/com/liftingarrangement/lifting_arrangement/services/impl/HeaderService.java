@@ -1,7 +1,9 @@
 package com.liftingarrangement.lifting_arrangement.services.impl;
 
 import com.liftingarrangement.lifting_arrangement.models.Header;
+import com.liftingarrangement.lifting_arrangement.models.UserLA;
 import com.liftingarrangement.lifting_arrangement.repositories.HeaderRepository;
+import com.liftingarrangement.lifting_arrangement.repositories.UserRepository;
 import com.liftingarrangement.lifting_arrangement.services.IHeaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,20 @@ class HeaderService implements IHeaderService {
 
     public List<Header> getHeaders() { return repository.findAll(); }
 
-    public Header createHeader(Header header) { return repository.save(header); }
+    @Autowired
+    private UserRepository userRepository;
+
+    public Header createHeader(Header header) {
+
+        Long userId = header.getUser_la().getId();
+
+        UserLA user = userRepository.findById(userId)
+                .orElseThrow();
+
+        header.setUser_la(user);
+
+        return repository.save(header);
+    }
 
     public void deleteHeader(Long id) { repository.deleteById(id); }
 
