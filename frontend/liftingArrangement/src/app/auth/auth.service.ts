@@ -30,4 +30,23 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
+
+  getRole(): string | null {
+  const token = this.getToken();
+  if (!token) return null;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+
+    // ⚠️ Ajustar según cómo generes el JWT en backend
+    return payload.role || payload.authorities?.[0]?.authority || null;
+
+  } catch (error) {
+    return null;
+  }
+}
+
+isAdmin(): boolean {
+  return this.getRole() === 'ROLE_ADMIN';
+}
 }

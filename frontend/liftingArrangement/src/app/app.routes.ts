@@ -19,6 +19,12 @@ export const routes: Routes = [
       import('./app-layout.component')
         .then(m => m.AppLayoutComponent)
   },
+  
+  {
+  path: 'admin/shackles',
+  loadComponent: () => import('./components/shackle-panel/shackle-form/shackle-form')
+    .then(m => m.ShackleFormComponent)
+  },
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
