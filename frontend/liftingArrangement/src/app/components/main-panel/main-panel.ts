@@ -47,18 +47,7 @@ onDrop(event: DragEvent) {
     const container = this.canvasContainer.nativeElement;
 
     this.konva.init(container);
-    // this.konva.addBeam(0, 0); // centro del mundo
-    // this.konva.addCraneHook(0, -500);
-    // this.konva.addSling(50,50);
-    // this.konva.addShackle(100,100);
-    // this.konva.addChain(50,100);
-    // this.konva.addWire(200,200);
-    // this.konva.addRing(100,100);
-    // this.konva.addLinkChain(500,500);
-    // this.konva.addHook(0,-300);
-    
 
-    // resize automático
     new ResizeObserver(entries => {
       const { width, height } = entries[0].contentRect;
       this.konva.resize(width, height);

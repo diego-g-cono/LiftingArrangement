@@ -37,8 +37,7 @@ export class AuthService {
 
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
-
-    // ⚠️ Ajustar según cómo generes el JWT en backend
+    
     return payload.role || payload.authorities?.[0]?.authority || null;
 
   } catch (error) {

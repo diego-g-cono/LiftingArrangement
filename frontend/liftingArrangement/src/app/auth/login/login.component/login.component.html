@@ -6,7 +6,6 @@
            border border-slate-700"
   >
 
-    <!-- Title -->
     <h2 class="text-2xl font-semibold text-center text-slate-100">
       Lifting Arrangement
     </h2>
@@ -15,7 +14,6 @@
       Acceso al sistema
     </p>
 
-    <!-- Email -->
     <div>
       <label class="block text-sm font-medium text-slate-300 mb-1">
         Email
@@ -32,7 +30,6 @@
       />
     </div>
 
-    <!-- Password -->
     <div>
       <label class="block text-sm font-medium text-slate-300 mb-1">
         Contraseña
@@ -49,15 +46,12 @@
       />
     </div>
 
-    <!-- Error -->
-    <p
-      *ngIf="error"
-      class="text-sm text-red-400 text-center"
-    >
+  @if (error) {
+    <p class="text-sm text-red-400 text-center">
       {{ error }}
     </p>
+  }
 
-    <!-- Button -->
     <button
       type="submit"
       class="w-full py-2 rounded-md bg-blue-600 text-white font-semibold

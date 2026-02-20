@@ -5,15 +5,12 @@
          flex flex-col"
 >
 
-  <!-- Title -->
   <div class="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-400">
     Components
   </div>
 
-  <!-- Items -->
   <nav class="flex-1 px-2 space-y-1">
 
-<!-- BEAMS -->
 <button
   (click)="toggle('BEAMS')"
   class="w-full flex items-center gap-3 px-3 py-2 rounded-md
@@ -23,20 +20,22 @@
   <span class="text-sm font-medium">Beams</span>
 </button>
 
-<!-- Subpanel Beam-->
-<div *ngIf="openSection === 'BEAMS'" class="ml-6 mt-2 space-y-2">
-<div
-  *ngFor="let item of catalog.BEAMS"
-  draggable="true"
-  (dragstart)="onDragStart($event, item)"
-  class="p-2 bg-slate-700 rounded cursor-grab"
->
-  <img [src]="item.preview" class="w-full pointer-events-none" />
-  <div class="text-xs text-center mt-1">{{ item.label }}</div>
-</div>
+@if (openSection === 'BEAMS') {
+  <div class="ml-6 mt-2 space-y-2">
 
-</div>
+    @for (item of catalog.BEAMS; track item) {
+      <div
+        draggable="true"
+        (dragstart)="onDragStart($event, item)"
+        class="p-2 bg-slate-700 rounded cursor-grab"
+      >
+        <img [src]="item.preview" class="w-full pointer-events-none" />
+        <div class="text-xs text-center mt-1">{{ item.label }}</div>
+      </div>
+    }
 
+  </div>
+}
 <!-- SLINGS -->
 <button
   (click)="toggle('SLINGS')"
@@ -48,19 +47,24 @@
 </button>
 
 <!-- Subpanel Slings-->
-<div *ngIf="openSection === 'SLINGS'" class="ml-6 mt-2 space-y-2">
-<div
-  *ngFor="let item of catalog.SLINGS"
-  draggable="true"
-  (dragstart)="onDragStart($event, item)"
-  class="p-2 bg-slate-700 rounded cursor-grab"
->
-  <img [src]="item.preview" class="w-full pointer-events-none" />
-  <div class="text-xs text-center mt-1">{{ item.label }}</div>
-</div>
+@if (openSection === 'SLINGS') {
+  <div class="ml-6 mt-2 space-y-2">
 
-</div>
+    @for (item of catalog.SLINGS; track item) {
+      <div
+        draggable="true"
+        (dragstart)="onDragStart($event, item)"
+        class="p-2 bg-slate-700 rounded cursor-grab"
+      >
+        <img [src]="item.preview" class="w-full pointer-events-none" />
+        <div class="text-xs text-center mt-1">
+          {{ item.label }}
+        </div>
+      </div>
+    }
 
+  </div>
+}
 <!-- CHAINS -->
     <button
     (click)="toggle('CHAINS')"
@@ -72,18 +76,24 @@
     </button>
 
     <!-- Subpanel Chain-->
-<div *ngIf="openSection === 'CHAINS'" class="ml-6 mt-2 space-y-2">
-<div
-  *ngFor="let item of catalog.CHAINS"
-  draggable="true"
-  (dragstart)="onDragStart($event, item)"
-  class="p-2 bg-slate-700 rounded cursor-grab"
->
-  <img [src]="item.preview" class="w-full pointer-events-none" />
-  <div class="text-xs text-center mt-1">{{ item.label }}</div>
-</div>
+@if (openSection === 'CHAINS') {
+  <div class="ml-6 mt-2 space-y-2">
 
-</div>
+    @for (item of catalog.CHAINS; track item) {
+      <div
+        draggable="true"
+        (dragstart)="onDragStart($event, item)"
+        class="p-2 bg-slate-700 rounded cursor-grab"
+      >
+        <img [src]="item.preview" class="w-full pointer-events-none" />
+        <div class="text-xs text-center mt-1">
+          {{ item.label }}
+        </div>
+      </div>
+    }
+
+  </div>
+}
 
 <!-- SHACKLES -->
 <div class="relative">
@@ -99,33 +109,41 @@
       <span class="text-sm font-medium">Shackles</span>
     </div>
 
-    <!-- BOTÓN + SOLO ADMIN -->
-    <button
-      *ngIf="authService.isAdmin()"
-      (click)="openShackleForm(); $event.stopPropagation()"
-      class="bg-yellow-400 text-black text-xs font-bold
-             w-6 h-6 rounded-full flex items-center justify-center
-             hover:bg-yellow-300 transition"
-    >
-      +
-    </button>
+<!-- BOTÓN + SOLO ADMIN -->
+@if (authService.isAdmin()) {
+  <button
+    (click)="openShackleForm(); $event.stopPropagation()"
+    class="bg-yellow-400 text-black text-xs font-bold
+           w-6 h-6 rounded-full flex items-center justify-center
+           hover:bg-yellow-300 transition"
+  >
+    +
+  </button>
+}
 
   </button>
 
 </div>
 
-        <!-- Subpanel Shackles-->
-<div *ngIf="openSection === 'SHACKLES'" class="ml-6 mt-2 space-y-2">
-<div
-  *ngFor="let item of catalog.SHACKLES"
-  draggable="true"
-  (dragstart)="onDragStart($event, item)"
-  class="p-2 bg-slate-700 rounded cursor-grab"
->
-  <img [src]="item.preview" class="w-full pointer-events-none" />
-  <div class="text-xs text-center mt-1">{{ item.label }}</div>
-</div>
-</div>
+<!-- Subpanel Shackles-->
+@if (openSection === 'SHACKLES') {
+  <div class="ml-6 mt-2 space-y-2">
+
+    @for (item of catalog.SHACKLES; track item) {
+      <div
+        draggable="true"
+        (dragstart)="onDragStart($event, item)"
+        class="p-2 bg-slate-700 rounded cursor-grab"
+      >
+        <img [src]="item.preview" class="w-full pointer-events-none" />
+        <div class="text-xs text-center mt-1">
+          {{ item.label }}
+        </div>
+      </div>
+    }
+
+  </div>
+}
 
 <!-- HOOKS -->
     <button
@@ -137,17 +155,24 @@
       <span class="text-sm font-medium">Hooks</span>
     </button>
 <!-- Subpanel Hooks-->
-<div *ngIf="openSection === 'HOOKS'" class="ml-6 mt-2 space-y-2">
-<div
-  *ngFor="let item of catalog.HOOKS"
-  draggable="true"
-  (dragstart)="onDragStart($event, item)"
-  class="p-2 bg-slate-700 rounded cursor-grab"
->
-  <img [src]="item.preview" class="w-full pointer-events-none" />
-  <div class="text-xs text-center mt-1">{{ item.label }}</div>
-</div>
-</div>
+@if (openSection === 'HOOKS') {
+  <div class="ml-6 mt-2 space-y-2">
+
+    @for (item of catalog.HOOKS; track item) {
+      <div
+        draggable="true"
+        (dragstart)="onDragStart($event, item)"
+        class="p-2 bg-slate-700 rounded cursor-grab"
+      >
+        <img [src]="item.preview" class="w-full pointer-events-none" />
+        <div class="text-xs text-center mt-1">
+          {{ item.label }}
+        </div>
+      </div>
+    }
+
+  </div>
+}
 
 <!-- CONNECTORS -->
     <button
@@ -160,17 +185,24 @@
     </button>
 
 <!-- Subpanel Hooks-->
-<div *ngIf="openSection === 'CONNECTORS'" class="ml-6 mt-2 space-y-2">
-<div
-  *ngFor="let item of catalog.CONNECTORS"
-  draggable="true"
-  (dragstart)="onDragStart($event, item)"
-  class="p-2 bg-slate-700 rounded cursor-grab"
->
-  <img [src]="item.preview" class="w-full pointer-events-none" />
-  <div class="text-xs text-center mt-1">{{ item.label }}</div>
-</div>
-</div>
+@if (openSection === 'CONNECTORS') {
+  <div class="ml-6 mt-2 space-y-2">
+
+    @for (item of catalog.CONNECTORS; track item) {
+      <div
+        draggable="true"
+        (dragstart)="onDragStart($event, item)"
+        class="p-2 bg-slate-700 rounded cursor-grab"
+      >
+        <img [src]="item.preview" class="w-full pointer-events-none" />
+        <div class="text-xs text-center mt-1">
+          {{ item.label }}
+        </div>
+      </div>
+    }
+
+  </div>
+}
     
   </nav>
   

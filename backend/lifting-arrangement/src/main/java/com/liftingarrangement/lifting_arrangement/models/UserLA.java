@@ -40,7 +40,7 @@ public class UserLA implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email; // 🔴 CLAVE
+        return email;
     }
 
     @Override public boolean isAccountNonExpired() { return true; }

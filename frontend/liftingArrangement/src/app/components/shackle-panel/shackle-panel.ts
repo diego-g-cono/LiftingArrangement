@@ -18,13 +18,10 @@ export class ShacklePanelComponent implements OnInit, OnDestroy {
 
   visible = false;
 
-  /** Shackle del canvas que estoy editando */
   selectedCanvasShackle?: CanvasShackle;
 
-  /** Catálogo desde backend */
   shacklesCatalog: ShackleDto[] = [];
 
-  /** ID seleccionado en el select */
   selectedShackleId?: number;
 
   private sub?: Subscription;
@@ -35,13 +32,11 @@ export class ShacklePanelComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Cargar catálogo
     this.shackleService.getAll().subscribe({
       next: data => this.shacklesCatalog = data,
       error: err => console.error('Error loading shackles', err)
     });
 
-    // Abrir panel
     this.sub = this.panelService.open$.subscribe(shackle => {
       this.selectedCanvasShackle = shackle;
       this.selectedShackleId = shackle.shackleId;
@@ -62,7 +57,6 @@ export class ShacklePanelComponent implements OnInit, OnDestroy {
 
     if (!dto) return;
 
-    // 🔥 ASIGNACIÓN REAL
     this.selectedCanvasShackle.shackleId = dto.id;
     this.selectedCanvasShackle.properties = { ...dto };
 

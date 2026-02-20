@@ -9,8 +9,8 @@ import { AuthService } from '../../auth.service';
   standalone: true,
   templateUrl: './login.component.html',
   imports: [
-    CommonModule,   // 👈 NgIf, NgFor
-    FormsModule     // 👈 ngModel
+    CommonModule,
+    FormsModule     
   ]
 })
 export class LoginComponent {
@@ -30,7 +30,7 @@ login() {
     password: this.password
   }).subscribe({
     next: () => {
-      this.router.navigate(['/app']); // 👈 SOLO AQUÍ
+      this.router.navigate(['/app']);
     },
     error: () => {
       this.error = 'Usuario o contraseña incorrectos';

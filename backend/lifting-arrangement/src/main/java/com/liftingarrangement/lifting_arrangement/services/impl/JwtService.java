@@ -44,7 +44,6 @@ public class JwtService {
                 .compact();
     }
 
-    // ✅ ESTE ES EL MÉTODO QUE TE FALTABA
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }

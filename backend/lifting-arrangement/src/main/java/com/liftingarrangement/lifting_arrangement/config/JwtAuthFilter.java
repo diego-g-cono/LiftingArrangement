@@ -32,17 +32,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        // 1️⃣ No hay token → seguir
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 2️⃣ Extraer JWT y username (email)
         final String jwt = authHeader.substring(7);
         final String userEmail = jwtService.extractUsername(jwt);
 
-        // 3️⃣ Si hay email y no está autenticado todavía
         if (userEmail != null &&
                 SecurityContextHolder.getContext().getAuthentication() == null) {
 
@@ -50,21 +47,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     .findByEmail(userEmail)
                     .orElseThrow();
 
-            // 4️⃣ Validar token
             if (jwtService.isTokenValid(jwt, userDetails)) {
 
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
                                 null,
-                                userDetails.getAuthorities() // 🔴 CLAVE PARA EVITAR 403
+                                userDetails.getAuthorities()
                         );
 
                 authToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
 
-                // 5️⃣ Setear autenticación en el contexto
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }

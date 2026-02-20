@@ -1,60 +1,64 @@
-<div
-  *ngIf="visible"
-  class="fixed right-0 top-0 h-full w-80
-         bg-slate-900 border-l border-slate-700 p-4 z-40"
->
-
-  <h3 class="text-sm font-semibold text-slate-200 mb-4">
-    Shackle
-  </h3>
-
-  <!-- Select -->
-  <label class="text-xs text-slate-400 mb-1 block">
-    Model
-  </label>
-
-  <select
-    class="field w-full"
-    [(ngModel)]="selectedShackleId"
+@if (visible) {
+  <div
+    class="fixed right-0 top-0 h-full w-80
+           bg-slate-900 border-l border-slate-700 p-4 z-40"
   >
-    <option [ngValue]="undefined">Select model</option>
-    <option *ngFor="let s of shacklesCatalog" [ngValue]="s.id">
-      WLL {{ s.working_load }} t — {{ s.code }}
-    </option>
-  </select>
 
-  <!-- Datos -->
-<div
-  *ngIf="selectedCanvasShackle?.properties as p"
-  class="mt-4 text-xs text-slate-300 space-y-1"
->
-  <div><b>WLL:</b> {{ p.working_load }} t</div>
-  <div><b>Ø:</b> {{ p.d2 }} mm</div>
-  <div><b>Norm:</b> {{ p.code }}</div>
-</div>
+    <h3 class="text-sm font-semibold text-slate-200 mb-4">
+      Shackle
+    </h3>
 
-  <!-- Actions -->
-  <div class="mt-6 flex justify-end gap-2 border-t border-slate-700 pt-4">
+    <!-- Select -->
+    <label class="text-xs text-slate-400 mb-1 block">
+      Model
+    </label>
 
-    <button
-      type="button"
-      (click)="close()"
-      class="px-3 py-1.5 rounded
-             bg-slate-700 hover:bg-slate-600 text-slate-200"
+    <select
+      class="field w-full"
+      [(ngModel)]="selectedShackleId"
     >
-      Cancel
-    </button>
+      <option [ngValue]="undefined">Select model</option>
 
-    <button
-      type="button"
-      (click)="assign()"
-      [disabled]="!selectedShackleId"
-      class="px-3 py-1.5 rounded
-             bg-blue-600 hover:bg-blue-500
-             disabled:bg-blue-900 text-white"
-    >
-      Assign
-    </button>
+      @for (s of shacklesCatalog; track s.id) {
+        <option [ngValue]="s.id">
+          WLL {{ s.working_load }} t — {{ s.code }}
+        </option>
+      }
 
+    </select>
+
+    <!-- Datos -->
+    @if (selectedCanvasShackle?.properties) {
+      <div class="mt-4 text-xs text-slate-300 space-y-1">
+        <div><b>WLL:</b> {{ selectedCanvasShackle?.properties?.working_load }} t</div>
+        <div><b>Ø:</b> {{ selectedCanvasShackle?.properties?.d2 }} mm</div>
+        <div><b>Norm:</b> {{ selectedCanvasShackle?.properties?.code }}</div>
+      </div>
+    }
+
+    <!-- Actions -->
+    <div class="mt-6 flex justify-end gap-2 border-t border-slate-700 pt-4">
+
+      <button
+        type="button"
+        (click)="close()"
+        class="px-3 py-1.5 rounded
+               bg-slate-700 hover:bg-slate-600 text-slate-200"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        (click)="assign()"
+        [disabled]="!selectedShackleId"
+        class="px-3 py-1.5 rounded
+               bg-blue-600 hover:bg-blue-500
+               disabled:bg-blue-900 text-white"
+      >
+        Assign
+      </button>
+
+    </div>
   </div>
-</div>
+}

@@ -25,22 +25,18 @@ export class SlingPanelComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
-    // abrir panel
     this.panelService.open$.subscribe(sling => {
       this.visible = true;
       this.selectedCanvasSling = sling;
       this.selectedSlingId = sling?.slingId;
     });
 
-    // cargar catálogo
     this.slingService.getAll().subscribe(data => {
       this.slingsCatalog = data;
     });
   }
 
   onSelectChange() {
-    // opcional: preview
   }
 
   assign() {
@@ -52,7 +48,6 @@ export class SlingPanelComponent implements OnInit {
 
     if (!selected) return;
 
-    // 🔥 ASIGNACIÓN REAL
     this.selectedCanvasSling.slingId = selected.id;
     this.selectedCanvasSling.properties = selected;
   }

@@ -1,8 +1,4 @@
-import { Component, signal } from '@angular/core';
-import { TopBar } from "./components/top-bar/top-bar";
-import { LeftBar } from './components/left-bar/left-bar';
-import { HeaderDialog } from './components/header-dialog/header-dialog';
-import { MainPanel } from "./components/main-panel/main-panel";
+import { Component} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({

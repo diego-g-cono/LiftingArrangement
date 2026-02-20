@@ -36,14 +36,11 @@ export class CheckService {
       return [];
     }
 
-    // 🔹 Carga base por ramal
     const loadPerLeg = totalLoad / liftingPoints;
 
     const results: CheckResult[] = [];
 
-    // ===============================
-    // 🔩 SHACKLES
-    // ===============================
+    // SHACKLES
     for (const shackle of this.konvaService.shackles) {
       if (!shackle.properties?.working_load) continue;
       
@@ -62,9 +59,7 @@ export class CheckService {
       this.mark(shackle, ok);
     }
 
-    // ===============================
-    // 🪢 SLINGS
-    // ===============================
+    // SLINGS
     for (const sling of this.konvaService.slings) {
       if (!sling.properties?.working_load) continue;
 
@@ -86,22 +81,12 @@ export class CheckService {
     return results;
   }
 
-  // ======================================================
-  // 🔢 CÁLCULOS
-  // ======================================================
+  // CÁLCULOS
 
   private calculateShackleLoad(
     shackle: CanvasShackle,
     baseLoad: number
   ): number {
-    /**
-     * Por ahora:
-     * - cada shackle toma 1 ramal
-     * - luego se puede corregir por:
-     *   - índice de cáncamo
-     *   - tipo de cáncamo (top/bottom)
-     *   - cantidad de ramales por cáncamo
-     */
     return baseLoad;
   }
 
@@ -109,20 +94,10 @@ export class CheckService {
     sling: CanvasSling,
     baseLoad: number
   ): number {
-    /**
-     * Por ahora:
-     * - cada sling toma 1 ramal
-     * - luego se agrega:
-     *   - factor de ángulo
-     *   - doble ramal
-     */
     return baseLoad;
   }
 
-  // ======================================================
-  // 🎨 FEEDBACK VISUAL
-  // ======================================================
-
+  // FEEDBACK VISUAL
   private mark(
     element: CanvasShackle | CanvasSling,
     ok: boolean
@@ -137,9 +112,6 @@ export class CheckService {
       const line = node as Konva.Line;
       line.stroke(color);
       line.strokeWidth(strokeWidth);
-      // const circle = node as Konva.Circle;
-      // circle.stroke(color);
-      // circle.strokeWidth(1);
     });
 
     group.getLayer()?.batchDraw();

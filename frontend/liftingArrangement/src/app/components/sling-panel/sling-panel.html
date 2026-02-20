@@ -1,53 +1,64 @@
-<div *ngIf="visible && selectedCanvasSling as sling"
-     class="fixed right-0 top-0 h-full w-80
-            bg-slate-900 border-l border-slate-700 p-4">
-
-  <h3 class="text-sm font-semibold text-slate-200 mb-4">
-    Sling
-  </h3>
-
-  <!-- SELECT -->
-  <label class="text-xs text-slate-400 mb-1 block">
-    Model
-  </label>
-
-  <select
-    class="field w-full"
-    [(ngModel)]="selectedSlingId"
+@if (visible && selectedCanvasSling) {
+  <div
+    class="fixed right-0 top-0 h-full w-80
+           bg-slate-900 border-l border-slate-700 p-4"
   >
-    <option [ngValue]="undefined">Seleccionar sling</option>
 
-    <option *ngFor="let s of slingsCatalog" [ngValue]="s.id">
-      {{ s.working_load }} t – {{ s.length }} m
-    </option>
-  </select>
+    <h3 class="text-sm font-semibold text-slate-200 mb-4">
+      Sling
+    </h3>
 
-  <!-- DATOS -->
-  <div *ngIf="sling.properties as p"
-       class="mt-4 text-xs text-slate-300 space-y-1">
+    <!-- SELECT -->
+    <label class="text-xs text-slate-400 mb-1 block">
+      Model
+    </label>
 
-    <div><b>WLL:</b> {{ p.working_load }} t</div>
-    <div><b>Length:</b> {{ p.length }} m</div>
-  </div>
-
-  <!-- ACTIONS -->
-  <div class="mt-6 flex justify-end gap-2">
-    <button
-      class="px-3 py-1 rounded bg-slate-700 text-slate-200"
-      (click)="close()"
+    <select
+      class="field w-full"
+      [(ngModel)]="selectedSlingId"
     >
-      Cancel
-    </button>
+      <option [ngValue]="undefined">
+        Seleccionar sling
+      </option>
 
-    <button
-      class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700
-             text-white text-xs"
-      [disabled]="!selectedSlingId"
-      (click)="assign()"
-      (click)="close()"
-    >
-      Assign
-    </button>
+      @for (s of slingsCatalog; track s.id) {
+        <option [ngValue]="s.id">
+          {{ s.working_load }} t – {{ s.length }} m
+        </option>
+      }
+
+    </select>
+
+    <!-- DATOS -->
+    @if (selectedCanvasSling.properties) {
+      <div class="mt-4 text-xs text-slate-300 space-y-1">
+        <div>
+          <b>WLL:</b> {{ selectedCanvasSling.properties.working_load }} t
+        </div>
+        <div>
+          <b>Length:</b> {{ selectedCanvasSling.properties.length }} m
+        </div>
+      </div>
+    }
+
+    <!-- ACTIONS -->
+    <div class="mt-6 flex justify-end gap-2">
+      <button
+        class="px-3 py-1 rounded bg-slate-700 text-slate-200"
+        (click)="close()"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700
+               text-white text-xs"
+        [disabled]="!selectedSlingId"
+        (click)="assign(); close()"
+      >
+        Assign
+      </button>
+    </div>
+
   </div>
-
-</div>
+}

@@ -8,9 +8,6 @@ import { BeamService } from '../../services/beam.service';
 import { User } from '../../interfaces/user.interface';
 import { BeamDto } from '../../interfaces/beam.dto';
 
-
-
-
 @Component({
   selector: 'la-header-dialog',
   standalone: true,
@@ -36,9 +33,6 @@ header: Header = {
   beam: { id: 0 }
 };
 
-
-
-
 constructor(
   private headerService: HeaderService,
   private userService: UserService,
@@ -55,7 +49,6 @@ submit() {
     next: saved => {
       console.log('Header saved', saved);
 
-      // opcional: guardar el proyecto activo
       this.headerService.confirm(saved);
 
       this.visible = false;
@@ -80,8 +73,6 @@ loadData() {
     }
   });
 }
-
-
 
   close() {
     this.visible = false;

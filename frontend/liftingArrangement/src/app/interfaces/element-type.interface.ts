@@ -13,8 +13,6 @@ export interface ElementDefinition {
   id: string;
   label: string;
   preview: string;
-
-  /** tipo lógico, no acción */
   type: ElementType;
 }
 

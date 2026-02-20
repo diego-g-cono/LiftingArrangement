@@ -59,13 +59,10 @@ export class KonvaService {
     this.layer = new Konva.Layer();
     this.stage.add(this.layer);
 
-    // Camera group
     this.camera = new Konva.Group({
       x: this.stage.width() / 2,
       y: this.stage.height() / 2,
     });
-
-    
 
     this.layer.add(this.camera);
     this.layer.draw();
@@ -125,9 +122,8 @@ private initZoom() {
   this.stage.on('wheel', e => {
     e.evt.preventDefault();
 
-    // ======================
-    // ROTACIÓN (SHIFT + wheel)
-    // ======================
+    // ROTACIÓN (SHIFT + rueda)
+    
     if (e.evt.shiftKey && this.activeGroup) {
       const delta = e.evt.deltaY > 0 ? 1 : -1;
       const angleStep = 5;
@@ -141,9 +137,8 @@ private initZoom() {
       return;
     }
 
-    // ======================
-    // ESCALADO (CTRL + wheel)
-    // ======================
+    // ESCALADO (CTRL + rueda)
+    
     if (e.evt.ctrlKey && this.activeGroup) {
       const scaleBy = 1.05;
       const direction = e.evt.deltaY < 0 ? 1 : -1;
@@ -151,7 +146,6 @@ private initZoom() {
       let newScale = this.activeGroup.scaleX();
       newScale *= direction > 0 ? scaleBy : 1 / scaleBy;
 
-      // límites (MUY importante)
       newScale = Math.max(0.1, Math.min(5, newScale));
 
       this.activeGroup.scale({
@@ -164,9 +158,8 @@ private initZoom() {
       return;
     }
 
-    // ======================
     // ZOOM (rueda normal)
-    // ======================
+    
     const oldScale = this.scale;
     const pointer = this.stage.getPointerPosition();
     if (!pointer) return;
@@ -215,7 +208,6 @@ private initZoom() {
     }
 
 addBeam(x = 0, y = 0, beamDbId: number = 0) {
-  // 🔹 ID gráfico (canvas / Konva)
   const canvasId = crypto.randomUUID();
   const terminals: BeamTerminal[] = [];
 
@@ -227,7 +219,7 @@ addBeam(x = 0, y = 0, beamDbId: number = 0) {
       x,
       y,
       draggable: true,
-      id: canvasId, // 🔹 SOLO canvasId
+      id: canvasId,
     });
 
     const beamImage = new Konva.Image({
@@ -241,7 +233,6 @@ addBeam(x = 0, y = 0, beamDbId: number = 0) {
 
     beamGroup.add(beamImage);
 
-    // ---------- Drag & Snap ----------
     beamGroup.on('dragend', () => {
       beamGroup.position({
         x: this.snapToGrid(beamGroup.x()),
@@ -265,7 +256,7 @@ addBeam(x = 0, y = 0, beamDbId: number = 0) {
     const width = imageObj.width;
     const height = imageObj.height;
 
-    // ---------- TERMINALES SUPERIORES ----------
+    // TERMINALES SUPERIORES
     const topPositions = [
       26.5,
       26.5 + 145.5,
@@ -296,7 +287,7 @@ addBeam(x = 0, y = 0, beamDbId: number = 0) {
       beamGroup.add(this.createTerminal(xPos, yPos, terminal));
     });
 
-    // ---------- TERMINALES INFERIORES ----------
+    // TERMINALES INFERIORES
     const bottomPositions = [
       26.5,
       26.5 + 145.5,
@@ -330,10 +321,9 @@ addBeam(x = 0, y = 0, beamDbId: number = 0) {
       beamGroup.add(this.createTerminal(xPos, yPos, terminal));
     });
 
-    // ---------- REGISTRO FINAL ----------
     this.beams.push({
-      id: beamDbId,        // 🔵 ID de base de datos
-      canvasId,            // 🟢 ID gráfico
+      id: beamDbId,        
+      canvasId,            
       group: beamGroup,
       terminals
     });
@@ -341,8 +331,6 @@ addBeam(x = 0, y = 0, beamDbId: number = 0) {
     this.layer.draw();
   };
 }
-
-
 
 snapToGrid(value: number): number {
     return Math.round(value / this.gridSize) * this.gridSize;
@@ -365,7 +353,6 @@ createTerminal(
 
   circle.setAttr('terminalId', terminal.id);
 
-  // Hover
   circle.on('mouseenter', () => {
     document.body.style.cursor = 'crosshair';
     circle.radius(10);
@@ -382,24 +369,19 @@ createTerminal(
     }
   });
 
-  // CLICK → iniciar conexión
   circle.on('click', () => {
 
-  // Si NO hay conexión activa → iniciar
   if (!this.activeTerminal) {
     this.startConnection(terminal, circle);
     return;
   }
 
-  // Si YA hay conexión activa → intentar cerrar
   this.finishConnection(terminal);
 
 });
 
-
   return circle;
 }
-
 
   createTerminalVisual(x: number, y: number) {
   return new Konva.Circle({
@@ -413,6 +395,7 @@ createTerminal(
   });
   
 }
+
 rotateBeam(beamCanvasId: string, direction: 'CW' | 'CCW') {
   const beam = this.beams.find(b => b.canvasId === beamCanvasId);
   
@@ -467,8 +450,6 @@ addCraneHook(x = 0, y = 0) {
   scaleY: SCALE,
 });
 
-
-    // Centramos la imagen
     craneHookImage.offsetX((imageObj.width * SCALE) / 2);
     craneHookImage.offsetY((imageObj.height * SCALE) / 2);
 
@@ -478,7 +459,8 @@ addCraneHook(x = 0, y = 0) {
     const width = imageObj.width;
     const height = imageObj.height;
     const scaledHeight = imageObj.height * SCALE;
-    // ---------- TERMINAL SUPERIOR ----------
+
+    // TERMINAL SUPERIOR
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: craneHookId,
@@ -486,7 +468,7 @@ addCraneHook(x = 0, y = 0) {
       type: 'TOP',
       index: 0,
       localX: 65,
-      localY: scaledHeight / 2 + 15, // ajuste fino después
+      localY: scaledHeight / 2 + 15,
     };
 
     terminals.push(topTerminal);
@@ -498,7 +480,7 @@ addCraneHook(x = 0, y = 0) {
       )
     );
 
-    // ---------- TERMINAL INFERIOR ----------
+    // TERMINAL INFERIOR
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: craneHookId,
@@ -506,7 +488,7 @@ addCraneHook(x = 0, y = 0) {
       type: 'BOTTOM',
       index: 0,
       localX: 105,
-      localY: scaledHeight / 2 + 15, // centro del gancho
+      localY: scaledHeight / 2 + 15, 
     };
 
     terminals.push(bottomTerminal);
@@ -518,7 +500,6 @@ addCraneHook(x = 0, y = 0) {
       )
     );
 
-    // Snap al soltar
     craneHookGroup.on('dragend', () => {
       craneHookGroup.position({
         x: this.snapToGrid(craneHookGroup.x()),
@@ -531,7 +512,7 @@ addCraneHook(x = 0, y = 0) {
       this.updateConnections();
     });
     craneHookGroup.on('click', e => {
-      e.cancelBubble = true; // evita pan
+      e.cancelBubble = true;
       this.activeGroup = craneHookGroup;
       this.selectGroup(craneHookGroup)
     });
@@ -550,7 +531,6 @@ addCraneHook(x = 0, y = 0) {
   
 }
 
-
 addSling(x = 0, y = 0) {
   const canvasId = crypto.randomUUID();
   const terminals: BeamTerminal[] = [];
@@ -568,9 +548,6 @@ addSling(x = 0, y = 0) {
       id: canvasId,
     });
 
-    // =========================
-    // IMAGEN
-    // =========================
     const slingImage = new Konva.Image({
       image: imageObj,
       x: 0,
@@ -584,9 +561,8 @@ addSling(x = 0, y = 0) {
 
     const visualHeight = imageObj.height * SCALE;
 
-    // =========================
     // TERMINAL SUPERIOR
-    // =========================
+    
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: canvasId,
@@ -606,9 +582,8 @@ addSling(x = 0, y = 0) {
     slingGroup.add(topCircle);
     terminals.push(topTerminal);
 
-    // =========================
     // TERMINAL INFERIOR
-    // =========================
+    
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: canvasId,
@@ -628,9 +603,6 @@ addSling(x = 0, y = 0) {
     slingGroup.add(bottomCircle);
     terminals.push(bottomTerminal);
 
-    // =========================
-    // MODELO CANVAS
-    // =========================
     const sling: CanvasSling = {
       canvasId,
       group: slingGroup,
@@ -639,9 +611,6 @@ addSling(x = 0, y = 0) {
       properties: undefined,
     };
 
-    // =========================
-    // EVENTOS
-    // =========================
     slingGroup.on('dragmove', () => {
       this.updateConnections();
     });
@@ -657,14 +626,10 @@ addSling(x = 0, y = 0) {
       this.openSlingProperties(sling);
     });
 
-    // =========================
-    // ADD AL CANVAS
-    // =========================
     this.slings.push(sling);
     this.camera.add(slingGroup);
     this.layer.batchDraw();
 
-    // opcional
     this.openSlingProperties(sling);
   };
 }
@@ -681,9 +646,6 @@ canConnect(a: BeamTerminal, b: BeamTerminal): boolean {
 
   // mismo elemento
   if (a.ownerCanvasId === b.ownerCanvasId) return false;
-
-  // mismo tipo (TOP–TOP o BOTTOM–BOTTOM)
-  //if (a.type === b.type) return false;
 
   // reglas por tipo de elemento
   if (a.ownerType === 'CRANEHOOK' && b.ownerType === 'SLING') return true;
@@ -735,10 +697,9 @@ finishConnection(target: BeamTerminal) {
     this.resetActiveTerminal();
     return;
   }
-  // validaciones (ya las tenés)
+  
   if (source.id === target.id) return this.resetActiveTerminal();
   if (source.ownerCanvasId === target.ownerCanvasId) return this.resetActiveTerminal();
-  //if (source.type === target.type) return this.resetActiveTerminal();
 
   const p1 = this.getTerminalWorldPosition(source);
   const p2 = this.getTerminalWorldPosition(target);
@@ -804,7 +765,7 @@ cancelActiveConnection() {
 }
 
 updateConnection(_connection: Connection) {
-  // TODO: futuras validaciones físicas
+  // futuras validaciones
 }
 
 resetActiveTerminal() {
@@ -903,22 +864,6 @@ updateSelectionVisual() {
     height: box.height + 12,
   });
 }
-// addElement(type: ElementType) {
-//   const x = 0;
-//   const y = 0;
-
-//   switch (type) {
-//     case 'BEAM':
-//       this.addBeam(x, y);
-//       break;
-//     // case 'CRANEHOOK':
-//     //   this.addCraneHook(x, y);
-//     //   break;
-//     // case 'SLING':
-//     //   this.addSling(x, y);
-//     //   break;
-//   }
-// }
 
 addChain(x = 0, y = 0) {
   const chainId = crypto.randomUUID();
@@ -948,12 +893,9 @@ addChain(x = 0, y = 0) {
 
     chainGroup.add(chainImage);
 
-    // 🔹 altura visual real
     const visualHeight = imageObj.height * SCALE;
 
-    // =========================
     // TERMINAL SUPERIOR
-    // =========================
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: chainId,
@@ -973,9 +915,7 @@ addChain(x = 0, y = 0) {
     chainGroup.add(topCircle);
     terminals.push(topTerminal);
 
-    // =========================
     // TERMINAL INFERIOR
-    // =========================
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: chainId,
@@ -999,12 +939,10 @@ addChain(x = 0, y = 0) {
   });
 
   chainGroup.on('click', e => {
-  e.cancelBubble = true; // evita pan
+  e.cancelBubble = true;
   this.activeGroup = chainGroup;
   this.selectGroup(chainGroup)
 });
-
-    // =========================
 
     this.camera.add(chainGroup);
     this.layer.batchDraw();
@@ -1031,7 +969,7 @@ addShackle(x = 0, y = 0) {
       x,
       y,
       draggable: true,
-      id: canvasId, // 🔵 SOLO canvasId
+      id: canvasId,
     });
 
     const shackleImage = new Konva.Image({
@@ -1045,9 +983,7 @@ addShackle(x = 0, y = 0) {
 
     shackleGroup.add(shackleImage);
 
-    // =========================
     // TERMINAL SUPERIOR
-    // =========================
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: canvasId,
@@ -1067,9 +1003,7 @@ addShackle(x = 0, y = 0) {
       )
     );
 
-    // =========================
     // TERMINAL INFERIOR
-    // =========================
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: canvasId,
@@ -1089,9 +1023,6 @@ addShackle(x = 0, y = 0) {
       )
     );
 
-    // =========================
-    // EVENTOS
-    // =========================
     shackleGroup.on('dragend', () => {
       shackleGroup.position({
         x: this.snapToGrid(shackleGroup.x()),
@@ -1110,28 +1041,24 @@ addShackle(x = 0, y = 0) {
       this.selectGroup(shackleGroup);
     });
 
-    // 👉 DOBLE CLICK → editar propiedades
     shackleGroup.on('dblclick', e => {
       e.cancelBubble = true;
       this.openShackleProperties(shackle);
     });
 
-    // =========================
     // REGISTRO LÓGICO
-    // =========================
     const shackle: CanvasShackle = {
       canvasId,
       group: shackleGroup,
       terminals,
-      shackleId: undefined,   // 🔴 todavía no asignado
-      properties: undefined,  // 🔴 todavía no asignado
+      shackleId: undefined, 
+      properties: undefined,
     };
 
     this.shackles.push(shackle);
     this.camera.add(shackleGroup);
     this.layer.draw();
 
-    // 👉 OPCIONAL: abrir panel automáticamente
     this.openShackleProperties(shackle);
   };
 }
@@ -1168,12 +1095,10 @@ addWire(x = 0, y = 0) {
 
     wireGroup.add(chainImage);
 
-    // 🔹 altura visual real
     const visualHeight = imageObj.height * SCALE;
 
-    // =========================
     // TERMINAL SUPERIOR
-    // =========================
+    
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: wireId,
@@ -1193,9 +1118,7 @@ addWire(x = 0, y = 0) {
     wireGroup.add(topCircle);
     terminals.push(topTerminal);
 
-    // =========================
     // TERMINAL INFERIOR
-    // =========================
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: wireId,
@@ -1219,13 +1142,10 @@ addWire(x = 0, y = 0) {
   });
 
   wireGroup.on('click', e => {
-  e.cancelBubble = true; // evita pan
+  e.cancelBubble = true;
   this.activeGroup = wireGroup;
   this.selectGroup(wireGroup)
 });
-
-    // =========================
-
     this.camera.add(wireGroup);
     this.layer.batchDraw();
 
@@ -1262,8 +1182,6 @@ addRing(x = 0, y = 0) {
   scaleY: SCALE,
 });
 
-
-    // Centramos la imagen
     ringImage.offsetX((imageObj.width * SCALE) / 2);
     ringImage.offsetY((imageObj.height * SCALE) / 2);
 
@@ -1273,7 +1191,7 @@ addRing(x = 0, y = 0) {
     const width = imageObj.width;
     const height = imageObj.height;
     const scaledHeight = imageObj.height * SCALE;
-    // ---------- TERMINAL SUPERIOR ----------
+    //TERMINAL SUPERIOR
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: ringId,
@@ -1293,7 +1211,7 @@ addRing(x = 0, y = 0) {
       )
     );
 
-    // ---------- TERMINAL INFERIOR ----------
+    // TERMINAL INFERIOR
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: ringId,
@@ -1313,7 +1231,6 @@ addRing(x = 0, y = 0) {
       )
     );
 
-    // Snap al soltar
     ringGroup.on('dragend', () => {
       ringGroup.position({
         x: this.snapToGrid(ringGroup.x()),
@@ -1326,7 +1243,7 @@ addRing(x = 0, y = 0) {
       this.updateConnections();
     });
     ringGroup.on('click', e => {
-      e.cancelBubble = true; // evita pan
+      e.cancelBubble = true;
       this.activeGroup = ringGroup;
       this.selectGroup(ringGroup)
     });
@@ -1370,8 +1287,6 @@ addLinkChain(x = 0, y = 0) {
   scaleY: SCALE,
 });
 
-
-    // Centramos la imagen
     linkChainImage.offsetX((imageObj.width * SCALE) / 2);
     linkChainImage.offsetY((imageObj.height * SCALE) / 2);
 
@@ -1381,7 +1296,8 @@ addLinkChain(x = 0, y = 0) {
     const width = imageObj.width;
     const height = imageObj.height;
     const scaledHeight = imageObj.height * SCALE;
-    // ---------- TERMINAL SUPERIOR ----------
+
+    // TERMINAL SUPERIOR
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: linkChainId,
@@ -1401,7 +1317,7 @@ addLinkChain(x = 0, y = 0) {
       )
     );
 
-    // ---------- TERMINAL INFERIOR ----------
+    // TERMINAL INFERIOR
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: linkChainId,
@@ -1421,7 +1337,6 @@ addLinkChain(x = 0, y = 0) {
       )
     );
 
-    // Snap al soltar
     linkChainGroup.on('dragend', () => {
       linkChainGroup.position({
         x: this.snapToGrid(linkChainGroup.x()),
@@ -1434,7 +1349,7 @@ addLinkChain(x = 0, y = 0) {
       this.updateConnections();
     });
     linkChainGroup.on('click', e => {
-      e.cancelBubble = true; // evita pan
+      e.cancelBubble = true;
       this.activeGroup = linkChainGroup;
       this.selectGroup(linkChainGroup)
     });
@@ -1477,8 +1392,6 @@ addHook(x = 0, y = 0) {
   scaleY: SCALE,
 });
 
-
-    // Centramos la imagen
     hookImage.offsetX((imageObj.width * SCALE) / 2);
     hookImage.offsetY((imageObj.height * SCALE) / 2);
 
@@ -1488,7 +1401,8 @@ addHook(x = 0, y = 0) {
     const width = imageObj.width;
     const height = imageObj.height;
     const scaledHeight = imageObj.height * SCALE;
-    // ---------- TERMINAL SUPERIOR ----------
+
+    //TERMINAL SUPERIOR
     const topTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: hookId,
@@ -1496,7 +1410,7 @@ addHook(x = 0, y = 0) {
       type: 'TOP',
       index: 0,
       localX: (imageObj.width * SCALE)/2 - 8.5,
-      localY: -(imageObj.height * SCALE)/2 + 52, // ajuste fino después
+      localY: -(imageObj.height * SCALE)/2 + 52,
     };
 
     terminals.push(topTerminal);
@@ -1508,7 +1422,7 @@ addHook(x = 0, y = 0) {
       )
     );
 
-    // ---------- TERMINAL INFERIOR ----------
+    // TERMINAL INFERIOR
     const bottomTerminal: BeamTerminal = {
       id: crypto.randomUUID(),
       ownerCanvasId: hookId,
@@ -1516,7 +1430,7 @@ addHook(x = 0, y = 0) {
       type: 'BOTTOM',
       index: 0,
       localX: (imageObj.width * SCALE)/2 - 12,
-      localY: (imageObj.height * SCALE)/2 + 15, // centro del gancho
+      localY: (imageObj.height * SCALE)/2 + 15,
     };
 
     terminals.push(bottomTerminal);
@@ -1528,7 +1442,6 @@ addHook(x = 0, y = 0) {
       )
     );
 
-    // Snap al soltar
     hookGroup.on('dragend', () => {
       hookGroup.position({
         x: this.snapToGrid(hookGroup.x()),
@@ -1541,7 +1454,7 @@ addHook(x = 0, y = 0) {
       this.updateConnections();
     });
     hookGroup.on('click', e => {
-      e.cancelBubble = true; // evita pan
+      e.cancelBubble = true;
       this.activeGroup = hookGroup;
       this.selectGroup(hookGroup)
     });
@@ -1570,7 +1483,6 @@ deleteSelected() {
   const group = this.selectedGroup;
   const id = group.id();
 
-  // 1️⃣ eliminar conexiones asociadas
   this.connections = this.connections.filter(conn => {
     const involved =
       conn.from.ownerCanvasId === id || conn.to.ownerCanvasId === id;
@@ -1582,7 +1494,6 @@ deleteSelected() {
     return !involved;
   });
 
-  // 2️⃣ eliminar de los arrays lógicos
   this.beams = this.beams.filter(b => b.canvasId !== id);
   this.slings = this.slings.filter(s => s.canvasId !== id);
   this.craneHooks = this.craneHooks.filter(h => h.id !== id);
@@ -1592,10 +1503,8 @@ deleteSelected() {
   this.shackles = this.shackles.filter(s => s.canvasId !== id);
   this.linkChains = this.linkChains.filter(l => l.id !== id);
 
-  // 3️⃣ destruir el group visual
   group.destroy();
 
-  // 4️⃣ limpiar selección
   this.clearSelection();
   this.activeGroup = null;
 

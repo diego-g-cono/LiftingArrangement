@@ -14,34 +14,25 @@ export class HeaderService {
 
   private headerSubject = new BehaviorSubject<Header | null>(null);
 
-  // streams públicos
   openDialog$ = this.open$.asObservable();
   confirmed$ = this.confirm$.asObservable();
   header$ = this.headerSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  // =====================
   // DIALOG
-  // =====================
-
   open() {
     this.open$.next();
   }
 
   confirm(header: Header) {
-    // 🔥 ESTE ERA EL FALTANTE
     this.headerSubject.next(header);
-
     this.confirm$.next(header);
   }
 
   close() {}
 
-  // =====================
   // STATE
-  // =====================
-
   get current(): Header | null {
     console.log(this.headerSubject.value);
     return this.headerSubject.value;
@@ -50,11 +41,8 @@ export class HeaderService {
   set(header: Header) {
     this.headerSubject.next(header);
   }
-
-  // =====================
+  
   // API
-  // =====================
-
   create(header: Header) {
     return this.http.post<Header>(this.apiUrl, header);
   }
