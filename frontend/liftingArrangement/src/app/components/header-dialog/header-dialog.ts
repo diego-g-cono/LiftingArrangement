@@ -29,7 +29,6 @@ header: Header = {
   unit_load: 0,
   operation: '',
   beam_capacity: 0,
-  user_la: { id: 0 },
   beam: { id: 0 }
 };
 
@@ -60,11 +59,11 @@ submit() {
 }
 loadData() {
   const token = this.authService.getToken();
+  
 
   if (token) {
     const payload = JSON.parse(atob(token.split('.')[1]));
 
-    this.header.user_la.id = payload.userId; 
   }
 
   this.beamService.getAll().subscribe(beams => {

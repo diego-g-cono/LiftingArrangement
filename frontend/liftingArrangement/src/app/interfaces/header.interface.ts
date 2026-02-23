@@ -13,10 +13,6 @@ export interface Header {
 
   beam_capacity: number | null;
 
-  user_la: {
-    id: number;
-  };
-
   beam: {
     id: number;
   };

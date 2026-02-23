@@ -6,6 +6,7 @@ import com.liftingarrangement.lifting_arrangement.repositories.HeaderRepository;
 import com.liftingarrangement.lifting_arrangement.repositories.UserRepository;
 import com.liftingarrangement.lifting_arrangement.services.IHeaderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,10 +25,14 @@ class HeaderService implements IHeaderService {
 
     public Header createHeader(Header header) {
 
-        Long userId = header.getUser_la().getId();
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
 
-        UserLA user = userRepository.findById(userId)
-                .orElseThrow();
+        UserLA user = userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         header.setUser_la(user);
 
