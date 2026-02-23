@@ -7,6 +7,7 @@ import { UserService } from '../../services/user.service';
 import { BeamService } from '../../services/beam.service';
 import { User } from '../../interfaces/user.interface';
 import { BeamDto } from '../../interfaces/beam.dto';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'la-header-dialog',
@@ -16,7 +17,6 @@ import { BeamDto } from '../../interfaces/beam.dto';
 })
 export class HeaderDialog {
   visible = false;
-  users: User[] = [];
   beams: BeamDto[] = [];
 
 
@@ -35,8 +35,8 @@ header: Header = {
 
 constructor(
   private headerService: HeaderService,
-  private userService: UserService,
-  private beamService: BeamService
+  private beamService: BeamService,
+  public authService: AuthService
 ) {
   this.headerService.openDialog$.subscribe(() => {
     this.visible = true;
@@ -59,12 +59,13 @@ submit() {
   });
 }
 loadData() {
-  this.userService.getAll().subscribe(users => {
-    this.users = users;
-    if (users.length > 0) {
-      this.header.user_la.id = users[0].id;
-    }
-  });
+  const token = this.authService.getToken();
+
+  if (token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+
+    this.header.user_la.id = payload.userId; 
+  }
 
   this.beamService.getAll().subscribe(beams => {
     this.beams = beams;

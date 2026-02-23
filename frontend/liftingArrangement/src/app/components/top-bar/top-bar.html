@@ -1,29 +1,74 @@
-<nav class="flex items-center h-14 bg-slate-900 text-slate-200 px-4 gap-4">
-  <div class="relative">
-    <button
-      class="hover:text-white"
-      (click)="toggleFileMenu()"
-    >
-      File
-    </button>
+<nav class="flex items-center justify-between h-14 bg-slate-900 text-slate-200 px-4">
 
-    <div
-      *ngIf="fileMenuOpen"
-      class="absolute top-full left-0 mt-1 bg-slate-800 border border-slate-700 rounded shadow"
-    >
+  <!-- IZQUIERDA -->
+  <div class="flex items-center gap-4">
+
+    <div class="relative">
       <button
-        class="block px-4 py-2 hover:bg-slate-700 w-full text-left"
-        (click)="newProject()"
+        class="hover:text-white"
+        (click)="toggleFileMenu()"
       >
-        New…
+        File
       </button>
-      <button 
-        class="block px-4 py-2 hover:bg-slate-700 w-full text-left"
-        (click)="check()">Check
+
+      @if (fileMenuOpen) {
+        <div
+          class="absolute top-full left-0 mt-1 bg-slate-800 border border-slate-700 rounded shadow"
+        >
+          <button
+            class="block px-4 py-2 hover:bg-slate-700 w-full text-left"
+            (click)="newProject()"
+          >
+            New…
+          </button>
+
+          <button 
+            class="block px-4 py-2 hover:bg-slate-700 w-full text-left"
+            (click)="check()"
+          >
+            Check
+          </button>
+        </div>
+      }
+    </div>
+
+  </div>
+
+  <!-- DERECHA (Usuario) -->
+  @if (userName) {
+    <div class="relative">
+
+      <button
+        (click)="toggleUserMenu()"
+        class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded transition"
+      >
+        {{ userName }}
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             class="h-4 w-4"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke="currentColor">
+          <path stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M19 9l-7 7-7-7" />
+        </svg>
       </button>
+
+      @if (userMenuOpen) {
+        <div
+          class="absolute right-0 mt-1 bg-slate-800 border border-slate-700 rounded shadow w-32"
+        >
+          <button
+            class="block px-4 py-2 hover:bg-slate-700 w-full text-left"
+            (click)="logout()"
+          >
+            Log out
+          </button>
+        </div>
+      }
 
     </div>
-  </div>
+  }
+
 </nav>
-
-

@@ -1,7 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+
+interface Brand {
+  id: number;
+  name: string;
+}
 
 @Component({
   selector: 'app-shackle-form',
@@ -9,11 +15,18 @@ import { HttpClient } from '@angular/common/http';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './shackle-form.html',
 })
-export class ShackleFormComponent {
+export class ShackleFormComponent implements OnInit {
 
   form!: FormGroup;
+  brands: Brand[] = [];
+  
+  constructor(
+  private fb: FormBuilder,
+  private http: HttpClient,
+  private router: Router
+  ) {}
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  ngOnInit(): void {
     this.form = this.fb.group({
       working_load: ['', Validators.required],
       code: ['', Validators.required],
@@ -26,6 +39,18 @@ export class ShackleFormComponent {
       brand_id: ['', Validators.required],
       c: ['', Validators.required],
     });
+
+    this.loadBrands();
+  }
+
+  loadBrands() {
+    this.http.get<Brand[]>('http://localhost:8080/brands')
+      .subscribe({
+        next: (data) => {
+          this.brands = data;
+        },
+        error: () => console.error('Error loading brands')
+      });
   }
 
   save() {
@@ -39,5 +64,8 @@ export class ShackleFormComponent {
         },
         error: () => alert('Error al crear shackle')
       });
+  }
+  volver() {
+  this.router.navigate(['/app']);
   }
 }

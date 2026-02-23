@@ -19,9 +19,10 @@ export class AuthService {
       );
   }
 
-  logout() {
-    localStorage.removeItem(this.ACCESS_TOKEN);
-  }
+logout() {
+  localStorage.removeItem(this.ACCESS_TOKEN);
+  localStorage.removeItem('refresh_token');
+}
 
   getToken(): string | null {
     return localStorage.getItem(this.ACCESS_TOKEN);
@@ -47,5 +48,16 @@ export class AuthService {
 
 isAdmin(): boolean {
   return this.getRole() === 'ROLE_ADMIN';
+}
+getUserName(): string | null {
+  const token = this.getToken();
+  if (!token) return null;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.name || payload.sub || null;
+  } catch (error) {
+    return null;
+  }
 }
 }

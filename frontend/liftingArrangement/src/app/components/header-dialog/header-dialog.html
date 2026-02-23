@@ -1,141 +1,142 @@
-<div *ngIf="visible" class="fixed inset-0 bg-black/70 z-50 flex items-start justify-center pt-28">
+@if (visible) {
+  <div class="fixed inset-0 bg-black/70 z-50 flex items-start justify-center pt-28">
 
-  <div
-    class="w-[560px]
-           bg-slate-900 text-slate-200
-           rounded-lg shadow-xl
-           border border-slate-700"
-  >
+    <div
+      class="w-[560px]
+             bg-slate-900 text-slate-200
+             rounded-lg shadow-xl
+             border border-slate-700"
+    >
 
-    <div class="px-5 py-3 border-b border-slate-700">
-      <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-300">
-        New Project
-      </h2>
+      <div class="px-5 py-3 border-b border-slate-700">
+        <h2 class="text-sm font-semibold uppercase tracking-wide text-slate-300">
+          New Project
+        </h2>
+      </div>
+
+      <form (ngSubmit)="submit()" class="p-5 grid grid-cols-2 gap-3 text-sm">
+
+        <input class="field" [(ngModel)]="header.date" name="date" placeholder="Date" />
+        <input class="field" [(ngModel)]="header.product" name="product" placeholder="Product" />
+
+        <div class="flex flex-col gap-1">
+          <label class="text-xs text-slate-400 uppercase tracking-wide">
+            Quantity
+          </label>
+          <input
+            class="field"
+            [(ngModel)]="header.quantity"
+            name="quantity"
+            type="number"
+          />
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-xs text-slate-400 uppercase tracking-wide">
+            Lifting Points
+          </label>
+          <input
+            class="field"
+            [(ngModel)]="header.lifting_points"
+            name="liftingPoints"
+            type="number"
+          />
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-xs text-slate-400 uppercase tracking-wide">
+            Max Load
+          </label>
+          <input
+            class="field"
+            [(ngModel)]="header.max_load"
+            name="maxLoad"
+            type="number"
+          />
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-xs text-slate-400 uppercase tracking-wide">
+            Unit Load
+          </label>
+          <input
+            class="field"
+            [(ngModel)]="header.unit_load"
+            name="unitLoad"
+            type="number"
+          />
+        </div>
+
+        <input class="field col-span-2" [(ngModel)]="header.operation" name="operation" placeholder="Operation" />
+
+        <!-- BEAM -->
+        <div class="flex flex-col gap-1">
+          <label class="text-xs text-slate-400 uppercase tracking-wide">
+            Beam
+          </label>
+
+          <select
+            class="field"
+            [(ngModel)]="header.beam.id"
+            name="beamId"
+          >
+            @for (b of beams; track b.id) {
+              <option [value]="b.id">
+                {{ b.name }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-xs text-slate-400 uppercase tracking-wide">
+            Beam Capacity
+          </label>
+          <input
+            class="field"
+            [(ngModel)]="header.beam_capacity"
+            name="beamCapacity"
+            type="number"
+          />
+        </div>
+
+        <!-- USER -->
+        <div class="flex flex-col gap-1">
+          <label class="text-xs text-slate-400 uppercase tracking-wide">
+            User
+          </label>
+
+          <input
+            class="field bg-slate-800 text-slate-400 cursor-not-allowed"
+            [value]="authService.getUserName()"
+            disabled
+          />
+        </div>
+
+        <div class="col-span-2 flex justify-end gap-2 pt-4 border-t border-slate-700 mt-2">
+
+          <button
+            type="button"
+            (click)="close()"
+            class="px-4 py-1.5 rounded
+                   bg-slate-700 hover:bg-slate-600
+                   text-slate-200 transition"
+          >
+            Volver ->
+          </button>
+
+          <button
+            type="submit"
+            class="px-4 py-1.5 rounded
+                   bg-blue-600 hover:bg-blue-500
+                   text-white transition"
+          >
+            Create
+          </button>
+
+        </div>
+
+      </form>
     </div>
-
-    <form (ngSubmit)="submit()" class="p-5 grid grid-cols-2 gap-3 text-sm">
-
-      <input class="field" [(ngModel)]="header.date" name="date" placeholder="Date" />
-      <input class="field" [(ngModel)]="header.product" name="product" placeholder="Product" />
-
-      <div class="flex flex-col gap-1">
-  <label class="text-xs text-slate-400 uppercase tracking-wide">
-    Quantity
-  </label>
-  <input
-    class="field"
-    [(ngModel)]="header.quantity"
-    name="quantity"
-    type="number"
-  />
-</div>
-
-      <div class="flex flex-col gap-1">
-  <label class="text-xs text-slate-400 uppercase tracking-wide">
-    Lifting Points
-  </label>
-  <input
-    class="field"
-    [(ngModel)]="header.lifting_points"
-    name="liftingPoints"
-    type="number"
-  />
-</div>
-
-
-      <div class="flex flex-col gap-1">
-  <label class="text-xs text-slate-400 uppercase tracking-wide">
-    Max Load
-  </label>
-  <input
-    class="field"
-    [(ngModel)]="header.max_load"
-    name="maxLoad"
-    type="number"
-  />
-</div>
-
-     <div class="flex flex-col gap-1">
-  <label class="text-xs text-slate-400 uppercase tracking-wide">
-    Unit Load
-  </label>
-  <input
-    class="field"
-    [(ngModel)]="header.unit_load"
-    name="unitLoad"
-    type="number"
-  />
-</div>
-
-
-      <input class="field col-span-2" [(ngModel)]="header.operation" name="operation" placeholder="Operation" />
-
-      <div class="flex flex-col gap-1">
-      <label class="text-xs text-slate-400 uppercase tracking-wide">
-        Beam
-      </label>
-      <select
-        class="field"
-        [(ngModel)]="header.beam.id"
-        name="beamId"
-      >
-        <option *ngFor="let b of beams" [value]="b.id">
-          {{ b.name }}
-        </option>
-      </select>
-      </div>
-
-<div class="flex flex-col gap-1">
-  <label class="text-xs text-slate-400 uppercase tracking-wide">
-    Beam Capacity
-  </label>
-  <input
-    class="field"
-    [(ngModel)]="header.beam_capacity"
-    name="beamCapacity"
-    type="number"
-  />
-</div>
-
-      <div class="flex flex-col gap-1">
-      <label class="text-xs text-slate-400 uppercase tracking-wide">
-        User
-      </label>
-      <select
-        class="field"
-        [(ngModel)]="header.user_la.id"
-        name="userId"
-      >
-        <option *ngFor="let u of users" [value]="u.id">
-          {{ u.name }}
-        </option>
-      </select>
-      </div>
-
-      <div class="col-span-2 flex justify-end gap-2 pt-4 border-t border-slate-700 mt-2">
-
-        <button
-          type="button"
-          (click)="close()"
-          class="px-4 py-1.5 rounded
-                 bg-slate-700 hover:bg-slate-600
-                 text-slate-200 transition"
-        >
-          Cancel
-        </button>
-
-        <button
-          type="submit"
-          class="px-4 py-1.5 rounded
-                 bg-blue-600 hover:bg-blue-500
-                 text-white transition"
-        >
-          Create
-        </button>
-
-      </div>
-
-    </form>
   </div>
-</div>
-
+}
